@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Żetpepe (ŻPP) - Dziennik Wagi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- EKRAN 1: LOGOWANIE -->
+        <section id="screen-login" class="app-screen">
+            <div class="panel-box">
+                <h1>🥗 Żetpepe</h1>
+                <h2>Żryj Przez Pół (ŻPP)</h2>
+                <input type="text" id="username" placeholder="Imię / Login">
+                <input type="password" id="password" placeholder="Hasło lub PIN">
+                <button id="login-btn" class="btn-primary full-width">Zaloguj się</button>
+                <p id="login-error" class="error hidden">Błędny login, hasło lub PIN!</p>
+            </div>
+        </section>
+
+        <!-- EKRAN 2: USTAWIENIE PIN-U (Tylko 1. logowanie) -->
+        <section id="screen-pin" class="app-screen hidden">
+            <div class="panel-box">
+                <h2>🔒 Zabezpiecz Żetpepe</h2>
+                <p>To Twoje pierwsze logowanie! Ustaw 4-cyfrowy PIN, którym będziesz logować się w przyszłości.</p>
+                <input type="text" id="new-pin" maxlength="4" placeholder="Wpisz 4 cyfry PINu" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <button id="save-pin-btn" class="btn-primary full-width">Zapisz PIN i wejdź</button>
+                <p id="pin-error" class="error hidden">PIN musi składać się z 4 cyfr!</p>
+            </div>
+        </section>
+
+        <!-- EKRAN 3: GŁÓWNY KALENDARZ -->
+        <section id="screen-dashboard" class="app-screen hidden">
+            
+            <header class="top-header">
+                <div class="user-info">
+                    <span class="avatar">🥗</span>
+                    <span class="welcome-text">ŻPP: <strong id="welcome-username">...</strong></span>
+                </div>
+                <div class="header-controls">
+                    <button id="theme-toggle" class="btn-icon" title="Przełącz motyw">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button id="logout-btn" class="btn-secondary">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </header>
+
+            <section class="month-navigation">
+                <button id="prev-month-btn" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                <h2 id="current-month-display" class="current-month">--- ----</h2>
+                <button id="next-month-btn" class="nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
+            </section>
+
+            <main class="calendar-wrapper">
+                <div class="weekdays-grid">
+                    <div>Pon</div>
+                    <div>Wt</div>
+                    <div>Śr</div>
+                    <div>Czw</div>
+                    <div>Pt</div>
+                    <div>Sob</div>
+                    <div>Niedz</div>
+                </div>
+
+                <div id="days-grid" class="days-grid"></div>
+            </main>
+        </section>
+
+    </div>
+
+    <!-- MODAL EDYCYJNY DNIA -->
+    <div id="edit-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Dzień: <span id="modal-date-display">--.--</span></h3>
+                <button class="close-btn" id="close-modal-btn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="weight-input">Dzisiejsza waga (kg):</label>
+                    <input type="number" id="weight-input" step="0.1" placeholder="np. 82.5">
+                </div>
+
+                <div class="form-group">
+                    <label>Zdarzenia dnia:</label>
+                    <div class="habit-toggles">
+                        <button type="button" class="toggle-btn" id="btn-habit-bike" data-active="false">
+                            <span class="icon">🚴</span> Rower
+                        </button>
+                        <button type="button" class="toggle-btn" id="btn-habit-donut" data-active="false">
+                            <span class="icon">🍩</span> Słodycze
+                        </button>
+                        <button type="button" class="toggle-btn" id="btn-habit-alcohol" data-active="false">
+                            <span class="icon">🍺</span> Alkohol
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Trzymanie miski (ŻPP):</label>
+                    <div class="color-picker">
+                        <label class="color-option green-option">
+                            <input type="radio" name="day-color" value="green">
+                            <span class="color-box">🟢 ŻPP idealnie</span>
+                        </label>
+                        <label class="color-option orange-option">
+                            <input type="radio" name="day-color" value="orange">
+                            <span class="color-box">🟠 Mały grzech</span>
+                        </label>
+                        <label class="color-option red-option">
+                            <input type="radio" name="day-color" value="red">
+                            <span class="color-box">🔴 Przeżarte</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancel-modal-btn">Anuluj</button>
+                <button class="btn-primary" id="save-day-btn">Zapisz dzień</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

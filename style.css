@@ -1,0 +1,456 @@
+/* ==========================================================================
+   1. ZMIENNE I MOTYWY (LIGHT / DARK MODE)
+   ========================================================================== */
+:root[data-theme="light"] {
+    --bg-main: #f4f6f9;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f0f4f8;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    /* Kolory statusów dni */
+    --color-green-bg: #e6f4ea;
+    --color-green-border: #34a853;
+    --color-orange-bg: #fef7e0;
+    --color-orange-border: #fbbc04;
+    --color-red-bg: #fce8e6;
+    --color-red-border: #ea4335;
+    
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+}
+
+:root[data-theme="dark"] {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --bg-card-hover: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+    /* Kolory statusów dni w trybie ciemnym */
+    --color-green-bg: #064e3b;
+    --color-green-border: #10b981;
+    --color-orange-bg: #78350f;
+    --color-orange-border: #f59e0b;
+    --color-red-bg: #7f1d1d;
+    --color-red-border: #ef4444;
+
+    --primary-color: #3b82f6;
+    --primary-hover: #60a5fa;
+}
+
+/* Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.app-container {
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ==========================================================================
+   2. NAGŁÓWEK I NAWIGACJA
+   ========================================================================== */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+}
+
+.avatar {
+    font-size: 1.5rem;
+    background: var(--bg-main);
+    padding: 6px;
+    border-radius: 50%;
+}
+
+.header-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Przyciski */
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.btn-icon {
+    background: var(--bg-main);
+    color: var(--text-primary);
+    padding: 10px 14px;
+    font-size: 1.1rem;
+}
+
+.btn-secondary {
+    background: var(--bg-main);
+    color: var(--text-secondary);
+    padding: 10px 16px;
+    border: 1px solid var(--border-color);
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+/* Nawigacja Miesiąca */
+.month-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.nav-btn {
+    background: var(--bg-main);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    font-size: 1rem;
+}
+
+/* Pasek Statystyk */
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    padding: 12px 16px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+/* ==========================================================================
+   3. SIATKA KALENDARZA (KAFLE)
+   ========================================================================== */
+.calendar-wrapper {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+
+.weekdays-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+/* Kafel Dnia */
+.day-card {
+    background-color: var(--bg-main);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    min-height: 100px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    position: relative;
+}
+
+.day-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.day-card.outside-month {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.day-card.outside-month:hover {
+    transform: none;
+}
+
+/* Nagłówek wewnątrz kafla */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.day-number {
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.today-badge {
+    background: var(--primary-color);
+    color: white;
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    text-transform: uppercase;
+}
+
+/* Wyświetlanie Wagi */
+.weight-display {
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 4px 0;
+}
+
+.weight-display small {
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: var(--text-secondary);
+}
+
+.weight-display.placeholder {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    opacity: 0.5;
+}
+
+/* Ikony / Odznaki w kaflu */
+.icons-container {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    min-height: 24px;
+    align-items: center;
+}
+
+.icon-badge {
+    font-size: 0.95rem;
+}
+
+.add-prompt {
+    font-size: 0.75rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   4. KOLORY STATUSÓW KAFELKÓW (Zgodnie z wymogami)
+   ========================================================================== */
+.day-card.status-green {
+    background-color: var(--color-green-bg);
+    border-color: var(--color-green-border);
+}
+
+.day-card.status-orange {
+    background-color: var(--color-orange-bg);
+    border-color: var(--color-orange-border);
+}
+
+.day-card.status-red {
+    background-color: var(--color-red-bg);
+    border-color: var(--color-red-border);
+}
+
+/* ==========================================================================
+   5. MODAL (POP-UP EDYCJI)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    width: 90%;
+    max-width: 450px;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-btn {
+    background: none;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-main);
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+/* Przyciski włączenia nawyków */
+.habit-toggles {
+    display: flex;
+    gap: 8px;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 10px 5px;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Wybór kolorów w modalu */
+.color-picker {
+    display: flex;
+    gap: 8px;
+}
+
+.color-option {
+    flex: 1;
+    cursor: pointer;
+}
+
+.color-option input {
+    display: none;
+}
+
+.color-box {
+    display: block;
+    text-align: center;
+    padding: 10px 4px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 2px solid transparent;
+    background: var(--bg-main);
+}
+
+.color-option input:checked + .color-box {
+    border-color: var(--text-primary);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* ==========================================================================
+   6. RESPONSYWNOŚĆ (TELEFONY / TABLETY)
+   ========================================================================== */
+@media (max-width: 768px) {
+    body { padding: 10px; }
+    
+    .days-grid {
+        gap: 4px;
+    }
+
+    .day-card {
+        min-height: 75px;
+        padding: 4px;
+        border-width: 1px;
+    }
+
+    .weight-display {
+        font-size: 0.95rem;
+    }
+
+    .icon-badge {
+        font-size: 0.75rem;
+    }
+}

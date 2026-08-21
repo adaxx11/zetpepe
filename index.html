@@ -24,7 +24,7 @@
             </div>
         </section>
 
-        <!-- EKRAN 2: USTAWIENIE PIN-U (Tylko 1. logowanie) -->
+        <!-- EKRAN 2: USTAWIENIE PIN-U -->
         <section id="screen-pin" class="app-screen hidden">
             <div class="panel-box">
                 <h2>🔒 Zabezpiecz Żetpepe</h2>
@@ -54,9 +54,9 @@
             </header>
 
             <section class="month-navigation">
-                <button id="prev-month-btn" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                <button id="prev-month-btn" class="nav-btn btn-secondary"><i class="fa-solid fa-chevron-left"></i></button>
                 <h2 id="current-month-display" class="current-month">--- ----</h2>
-                <button id="next-month-btn" class="nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                <button id="next-month-btn" class="nav-btn btn-secondary"><i class="fa-solid fa-chevron-right"></i></button>
             </section>
 
             <main class="calendar-wrapper">
@@ -94,7 +94,7 @@
                     <label>Zdarzenia dnia:</label>
                     <div class="habit-toggles">
                         <button type="button" class="toggle-btn" id="btn-habit-bike" data-active="false">
-                            <span class="icon">🚴</span> Rower
+                            <span class="icon">🏃</span> Aktywność
                         </button>
                         <button type="button" class="toggle-btn" id="btn-habit-donut" data-active="false">
                             <span class="icon">🍩</span> Słodycze
@@ -106,19 +106,19 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Trzymanie miski (ŻPP):</label>
+                    <label>Ocena dnia:</label>
                     <div class="color-picker">
                         <label class="color-option green-option">
                             <input type="radio" name="day-color" value="green">
-                            <span class="color-box">🟢 ŻPP idealnie</span>
+                            <span class="color-box">🟢 idealnie</span>
                         </label>
                         <label class="color-option orange-option">
                             <input type="radio" name="day-color" value="orange">
-                            <span class="color-box">🟠 Mały grzech</span>
+                            <span class="color-box">🟠 była wtopa</span>
                         </label>
                         <label class="color-option red-option">
                             <input type="radio" name="day-color" value="red">
-                            <span class="color-box">🔴 Przeżarte</span>
+                            <span class="color-box">🔴 dzień stracony</span>
                         </label>
                     </div>
                 </div>

@@ -49,7 +49,6 @@ let currentDate = new Date();
 let selectedDateStr = null; 
 let monthDaysData = {}; 
 
-// Przełączanie pełnych ekranów (Login / PIN / Kalendarz)
 function showScreen(screenName) {
     document.getElementById('screen-login').classList.add('hidden');
     document.getElementById('screen-pin').classList.add('hidden');
@@ -201,9 +200,12 @@ async function renderCalendar() {
     }
 
     const today = new Date();
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
     for (let day = 1; day <= totalDaysInMonth; day++) {
         const dayString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const dayData = monthDaysData[dayString] || {};
+        const thisDayDate = new Date(year, month, day);
 
         const card = document.createElement('div');
         card.classList.add('day-card');
@@ -211,10 +213,11 @@ async function renderCalendar() {
         if (dayData.color) card.classList.add(`status-${dayData.color}`);
 
         const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+        const isFuture = thisDayDate > todayMidnight;
 
         let iconsHtml = "";
         if (dayData.habits) {
-            if (dayData.habits.bike) iconsHtml += `<span>🚴</span>`;
+            if (dayData.habits.bike) iconsHtml += `<span>🏃</span>`;
             if (dayData.habits.donut) iconsHtml += `<span>🍩</span>`;
             if (dayData.habits.alcohol) iconsHtml += `<span>🍺</span>`;
         }
@@ -232,7 +235,13 @@ async function renderCalendar() {
             </div>
         `;
 
-        card.addEventListener('click', () => openModal(dayString, dayData));
+        // Blokada klikania w dni z przyszłości
+        if (isFuture) {
+            card.classList.add('future-day');
+        } else {
+            card.addEventListener('click', () => openModal(dayString, dayData));
+        }
+
         daysGrid.appendChild(card);
     }
 }
@@ -260,6 +269,7 @@ function setHabitState(btn, state) {
     btn.setAttribute('data-active', state ? "true" : "false");
 }
 
+// Przełączanie dowolnej kombinacji 3 zdarzeń
 [btnHabitBike, btnHabitDonut, btnHabitAlcohol].forEach(btn => {
     btn.addEventListener('click', () => {
         const curr = btn.getAttribute('data-active') === "true";

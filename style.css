@@ -1,16 +1,14 @@
 /* ==========================================================================
-   1. ZMIENNE I MOTYWY (LIGHT / DARK MODE)
+   1. ZMIENNE I MOTYWY
    ========================================================================== */
 :root[data-theme="light"] {
     --bg-main: #f4f6f9;
     --bg-card: #ffffff;
-    --bg-card-hover: #f0f4f8;
     --text-primary: #1e293b;
     --text-secondary: #64748b;
     --border-color: #e2e8f0;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-    /* Kolory statusów dni */
     --color-green-bg: #e6f4ea;
     --color-green-border: #34a853;
     --color-orange-bg: #fef7e0;
@@ -25,13 +23,11 @@
 :root[data-theme="dark"] {
     --bg-main: #0f172a;
     --bg-card: #1e293b;
-    --bg-card-hover: #334155;
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --border-color: #334155;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 
-    /* Kolory statusów dni w trybie ciemnym */
     --color-green-bg: #064e3b;
     --color-green-border: #10b981;
     --color-orange-bg: #78350f;
@@ -43,22 +39,22 @@
     --primary-hover: #60a5fa;
 }
 
-/* Base Styles */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
 body {
     background-color: var(--bg-main);
     color: var(--text-primary);
     min-height: 100vh;
-    padding: 20px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
 .app-container {
@@ -66,11 +62,119 @@ body {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+}
+
+/* Klasa ukrywająca elementy */
+.hidden {
+    display: none !important;
 }
 
 /* ==========================================================================
-   2. NAGŁÓWEK I NAWIGACJA
+   2. PANALE LOGOWANIA I PIN-U (WYPOŚRODKOWANIE I RESPONSYWNOŚĆ)
+   ========================================================================== */
+.app-screen {
+    width: 100%;
+}
+
+#screen-login, #screen-pin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.panel-box {
+    background: var(--bg-card);
+    padding: 35px 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.panel-box h1 {
+    font-size: 2rem;
+    margin-bottom: 4px;
+}
+
+.panel-box h2 {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+.panel-box p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.panel-box input {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-main);
+    color: var(--text-primary);
+    font-size: 1rem;
+    outline: none;
+}
+
+.panel-box input:focus {
+    border-color: var(--primary-color);
+}
+
+.error {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 10px;
+}
+
+/* ==========================================================================
+   3. PRZYCISKI
+   ========================================================================== */
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.full-width {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-secondary {
+    background: var(--bg-main);
+    color: var(--text-secondary);
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+}
+
+.btn-icon {
+    background: var(--bg-main);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    font-size: 1rem;
+}
+
+/* ==========================================================================
+   4. KALENDARZ I DNI
    ========================================================================== */
 .top-header {
     display: flex;
@@ -80,61 +184,9 @@ body {
     padding: 15px 20px;
     border-radius: 12px;
     box-shadow: var(--shadow);
+    margin-bottom: 15px;
 }
 
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-}
-
-.avatar {
-    font-size: 1.5rem;
-    background: var(--bg-main);
-    padding: 6px;
-    border-radius: 50%;
-}
-
-.header-controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-/* Przyciski */
-button {
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-}
-
-.btn-icon {
-    background: var(--bg-main);
-    color: var(--text-primary);
-    padding: 10px 14px;
-    font-size: 1.1rem;
-}
-
-.btn-secondary {
-    background: var(--bg-main);
-    color: var(--text-secondary);
-    padding: 10px 16px;
-    border: 1px solid var(--border-color);
-}
-
-.btn-primary {
-    background: var(--primary-color);
-    color: white;
-    padding: 10px 20px;
-}
-
-.btn-primary:hover {
-    background: var(--primary-hover);
-}
-
-/* Nawigacja Miesiąca */
 .month-navigation {
     display: flex;
     justify-content: space-between;
@@ -143,47 +195,9 @@ button {
     padding: 12px 20px;
     border-radius: 12px;
     box-shadow: var(--shadow);
+    margin-bottom: 15px;
 }
 
-.nav-btn {
-    background: var(--bg-main);
-    color: var(--text-primary);
-    padding: 8px 16px;
-    font-size: 1rem;
-}
-
-/* Pasek Statystyk */
-.stats-bar {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-}
-
-.stat-card {
-    background: var(--bg-card);
-    padding: 12px 16px;
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.stat-label {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-}
-
-.stat-value {
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin-top: 4px;
-}
-
-/* ==========================================================================
-   3. SIATKA KALENDARZA (KAFLE)
-   ========================================================================== */
 .calendar-wrapper {
     background: var(--bg-card);
     padding: 20px;
@@ -207,35 +221,35 @@ button {
     gap: 10px;
 }
 
-/* Kafel Dnia */
 .day-card {
     background-color: var(--bg-main);
     border: 2px solid var(--border-color);
     border-radius: 12px;
-    min-height: 100px;
+    min-height: 95px;
     padding: 8px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
-    position: relative;
 }
 
-.day-card:hover {
+.day-card:hover:not(.outside-month):not(.future-day) {
     transform: translateY(-2px);
     box-shadow: var(--shadow);
 }
 
+/* Dni spoza miesiąca oraz z przyszłości */
 .day-card.outside-month {
-    opacity: 0.3;
+    opacity: 0.2;
     cursor: default;
 }
 
-.day-card.outside-month:hover {
-    transform: none;
+.day-card.future-day {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: var(--bg-main);
 }
 
-/* Nagłówek wewnątrz kafla */
 .card-header {
     display: flex;
     justify-content: space-between;
@@ -256,9 +270,8 @@ button {
     text-transform: uppercase;
 }
 
-/* Wyświetlanie Wagi */
 .weight-display {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
     margin: 4px 0;
@@ -270,51 +283,20 @@ button {
     color: var(--text-secondary);
 }
 
-.weight-display.placeholder {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    opacity: 0.5;
-}
-
-/* Ikony / Odznaki w kaflu */
 .icons-container {
     display: flex;
     justify-content: center;
     gap: 4px;
-    min-height: 24px;
-    align-items: center;
+    min-height: 22px;
 }
 
-.icon-badge {
-    font-size: 0.95rem;
-}
-
-.add-prompt {
-    font-size: 0.75rem;
-    color: var(--primary-color);
-    font-weight: 600;
-}
+/* Kolory statusów */
+.day-card.status-green { background-color: var(--color-green-bg); border-color: var(--color-green-border); }
+.day-card.status-orange { background-color: var(--color-orange-bg); border-color: var(--color-orange-border); }
+.day-card.status-red { background-color: var(--color-red-bg); border-color: var(--color-red-border); }
 
 /* ==========================================================================
-   4. KOLORY STATUSÓW KAFELKÓW (Zgodnie z wymogami)
-   ========================================================================== */
-.day-card.status-green {
-    background-color: var(--color-green-bg);
-    border-color: var(--color-green-border);
-}
-
-.day-card.status-orange {
-    background-color: var(--color-orange-bg);
-    border-color: var(--color-orange-border);
-}
-
-.day-card.status-red {
-    background-color: var(--color-red-bg);
-    border-color: var(--color-red-border);
-}
-
-/* ==========================================================================
-   5. MODAL (POP-UP EDYCJI)
+   5. MODAL I PRZYCISKI ZDARZEŃ (HABITY)
    ========================================================================== */
 .modal-overlay {
     position: fixed;
@@ -326,16 +308,12 @@ button {
     z-index: 1000;
 }
 
-.modal-overlay.hidden {
-    display: none;
-}
-
 .modal-content {
     background: var(--bg-card);
     width: 90%;
-    max-width: 450px;
+    max-width: 420px;
     border-radius: 16px;
-    padding: 20px;
+    padding: 24px;
     box-shadow: var(--shadow);
 }
 
@@ -366,15 +344,15 @@ button {
 
 .form-group input[type="number"] {
     width: 100%;
-    padding: 12px;
+    padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background: var(--bg-main);
     color: var(--text-primary);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
 }
 
-/* Przyciski włączenia nawyków */
+/* Przełączniki zdarzeń - Styl zaznaczenia */
 .habit-toggles {
     display: flex;
     gap: 8px;
@@ -382,38 +360,41 @@ button {
 
 .toggle-btn {
     flex: 1;
-    padding: 10px 5px;
+    padding: 10px 4px;
     background: var(--bg-main);
-    border: 1px solid var(--border-color);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
     color: var(--text-primary);
     font-size: 0.85rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 4px;
+    cursor: pointer;
 }
 
-/* Wybór kolorów w modalu */
+/* PODŚWIETLENIE ZAZNACZONEGO ZDARZENIA */
+.toggle-btn[data-active="true"] {
+    border-color: var(--primary-color);
+    background-color: rgba(37, 99, 235, 0.08);
+    font-weight: bold;
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
 .color-picker {
     display: flex;
     gap: 8px;
 }
 
-.color-option {
-    flex: 1;
-    cursor: pointer;
-}
-
-.color-option input {
-    display: none;
-}
+.color-option { flex: 1; cursor: pointer; }
+.color-option input { display: none; }
 
 .color-box {
     display: block;
     text-align: center;
     padding: 10px 4px;
     border-radius: 8px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: bold;
     border: 2px solid transparent;
     background: var(--bg-main);
@@ -427,34 +408,12 @@ button {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 24px;
 }
 
-/* ==========================================================================
-   6. RESPONSYWNOŚĆ (TELEFONY / TABLETY)
-   ========================================================================== */
 @media (max-width: 768px) {
     body { padding: 10px; }
-    
-    .days-grid {
-        gap: 4px;
-    }
-
-    .day-card {
-        min-height: 75px;
-        padding: 4px;
-        border-width: 1px;
-    }
-
-    .weight-display {
-        font-size: 0.95rem;
-    }
-
-    .icon-badge {
-        font-size: 0.75rem;
-    }
-}
-
-.hidden {
-    display: none !important;
+    .days-grid { gap: 4px; }
+    .day-card { min-height: 75px; padding: 4px; }
+    .weight-display { font-size: 0.95rem; }
 }

@@ -64,13 +64,12 @@ body {
     flex-direction: column;
 }
 
-/* Klasa ukrywająca elementy */
 .hidden {
     display: none !important;
 }
 
 /* ==========================================================================
-   2. PANELE LOGOWANIA I PIN-U (WYPOŚRODKOWANIE I RESPONSYWNOŚĆ)
+   2. PANELE LOGOWANIA I PIN-U
    ========================================================================== */
 .app-screen {
     width: 100%;
@@ -94,23 +93,9 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.panel-box h1 {
-    font-size: 2rem;
-    margin-bottom: 4px;
-}
-
-.panel-box h2 {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    margin-bottom: 24px;
-}
-
-.panel-box p {
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-    line-height: 1.4;
-}
+.panel-box h1 { font-size: 2rem; margin-bottom: 4px; }
+.panel-box h2 { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 24px; }
+.panel-box p { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4; }
 
 .panel-box input {
     width: 100%;
@@ -124,15 +109,8 @@ body {
     outline: none;
 }
 
-.panel-box input:focus {
-    border-color: var(--primary-color);
-}
-
-.error {
-    color: #ef4444;
-    font-size: 0.85rem;
-    margin-top: 10px;
-}
+.panel-box input:focus { border-color: var(--primary-color); }
+.error { color: #ef4444; font-size: 0.85rem; margin-top: 10px; }
 
 /* ==========================================================================
    3. PRZYCISKI
@@ -144,55 +122,21 @@ button {
     font-weight: 600;
 }
 
-.full-width {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-}
-
-.btn-primary {
-    background: var(--primary-color);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: var(--primary-hover);
-}
-
-.btn-secondary {
-    background: var(--bg-main);
-    color: var(--text-secondary);
-    padding: 8px 16px;
-    border: 1px solid var(--border-color);
-}
-
-.btn-icon {
-    background: var(--bg-main);
-    color: var(--text-primary);
-    padding: 8px 12px;
-    font-size: 1rem;
-}
+.full-width { width: 100%; padding: 12px; font-size: 1rem; }
+.btn-primary { background: var(--primary-color); color: white; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background: var(--bg-main); color: var(--text-secondary); padding: 8px 16px; border: 1px solid var(--border-color); }
+.btn-icon { background: var(--bg-main); color: var(--text-primary); padding: 8px 12px; font-size: 1rem; }
 
 /* ==========================================================================
-   4. KALENDARZ I DNI
+   4. KALENDARZ I KAFLI (JEDNAKOWE STAŁE WYMIARY)
    ========================================================================== */
-.top-header {
+.top-header, .month-navigation {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: var(--bg-card);
     padding: 15px 20px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    margin-bottom: 15px;
-}
-
-.month-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--bg-card);
-    padding: 12px 20px;
     border-radius: 12px;
     box-shadow: var(--shadow);
     margin-bottom: 15px;
@@ -219,13 +163,13 @@ button {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 8px;
+    width: 100%;
 }
 
 .day-card {
     background-color: var(--bg-main);
     border: 2px solid var(--border-color);
     border-radius: 12px;
-    min-height: 95px;
     padding: 6px;
     display: flex;
     flex-direction: column;
@@ -233,6 +177,8 @@ button {
     cursor: pointer;
     min-width: 0;
     overflow: hidden;
+    /* Sztywno wymuszone proporcje kafelka dla pełnej spójności */
+    aspect-ratio: 1 / 1.15;
 }
 
 .day-card:hover:not(.outside-month):not(.future-day) {
@@ -240,14 +186,13 @@ button {
     box-shadow: var(--shadow);
 }
 
-/* Dni spoza miesiąca oraz z przyszłości */
 .day-card.outside-month {
-    opacity: 0.2;
+    opacity: 0.15;
     cursor: default;
 }
 
 .day-card.future-day {
-    opacity: 0.4;
+    opacity: 0.35;
     cursor: not-allowed;
     background-color: var(--bg-main);
 }
@@ -259,44 +204,49 @@ button {
     width: 100%;
 }
 
-.day-number {
-    font-weight: bold;
-    font-size: 0.95rem;
-}
+.day-number { font-weight: bold; font-size: 0.95rem; }
 
 .today-badge {
     background: var(--primary-color);
     color: white;
-    font-size: 0.65rem;
-    padding: 2px 6px;
-    border-radius: 10px;
+    font-size: 0.6rem;
+    padding: 2px 5px;
+    border-radius: 8px;
     text-transform: uppercase;
 }
 
 .weight-display {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: bold;
     text-align: center;
-    margin: 4px 0;
+    margin: 2px 0;
 }
 
-.weight-display small {
-    font-size: 0.75rem;
-    font-weight: normal;
-    color: var(--text-secondary);
-}
+.weight-display small { font-size: 0.7rem; font-weight: normal; color: var(--text-secondary); }
 
 .icons-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2px;
     min-height: 20px;
-    flex-wrap: wrap;
 }
 
-.icons-container span {
+.icons-desktop {
+    display: flex;
+    gap: 2px;
+}
+
+.icons-desktop span {
     font-size: 0.85rem;
+    line-height: 1;
+}
+
+.icons-mobile {
+    display: none;
+}
+
+.mobile-alert-icon {
+    font-size: 0.8rem;
     line-height: 1;
 }
 
@@ -306,7 +256,7 @@ button {
 .day-card.status-red { background-color: var(--color-red-bg); border-color: var(--color-red-border); }
 
 /* ==========================================================================
-   5. MODAL I PRZYCISKI ZDARZEŃ (HABITY)
+   5. MODAL
    ========================================================================== */
 .modal-overlay {
     position: fixed;
@@ -327,31 +277,11 @@ button {
     box-shadow: var(--shadow);
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.close-btn { background: none; font-size: 1.5rem; color: var(--text-secondary); }
 
-.close-btn {
-    background: none;
-    font-size: 1.5rem;
-    color: var(--text-secondary);
-}
-
-.form-group {
-    margin-bottom: 18px;
-}
-
-.form-group label {
-    display: block;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; }
 .form-group input[type="number"] {
     width: 100%;
     padding: 10px 12px;
@@ -362,11 +292,7 @@ button {
     font-size: 1.05rem;
 }
 
-/* Przełączniki zdarzeń - Styl zaznaczenia */
-.habit-toggles {
-    display: flex;
-    gap: 8px;
-}
+.habit-toggles { display: flex; gap: 8px; }
 
 .toggle-btn {
     flex: 1;
@@ -383,7 +309,6 @@ button {
     cursor: pointer;
 }
 
-/* PODŚWIETLENIE ZAZNACZONEGO ZDARZENIA */
 .toggle-btn[data-active="true"] {
     border-color: var(--primary-color);
     background-color: rgba(37, 99, 235, 0.08);
@@ -391,11 +316,7 @@ button {
     box-shadow: 0 0 0 1px var(--primary-color);
 }
 
-.color-picker {
-    display: flex;
-    gap: 8px;
-}
-
+.color-picker { display: flex; gap: 8px; }
 .color-option { flex: 1; cursor: pointer; }
 .color-option input { display: none; }
 
@@ -410,63 +331,30 @@ button {
     background: var(--bg-main);
 }
 
-.color-option input:checked + .color-box {
-    border-color: var(--text-primary);
-}
-
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 24px;
-}
+.color-option input:checked + .color-box { border-color: var(--text-primary); }
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
 
 /* ==========================================================================
-   6. RESPONSYWNOŚĆ (TELEFONY)
+   6. WIDOK MOBILNY (PRZEŁĄCZANIE IKONEK NA VYKRZYKNIK)
    ========================================================================== */
-@media (max-width: 768px) {
-    body { 
-        padding: 8px; 
+@media (max-width: 600px) {
+    body { padding: 6px; }
+    .calendar-wrapper { padding: 8px; }
+    .days-grid, .weekdays-grid { gap: 3px; }
+    
+    .day-card {
+        padding: 3px 2px;
+        border-width: 1px;
+        border-radius: 6px;
+        aspect-ratio: 1 / 1.1;
     }
+    
+    .day-number { font-size: 0.75rem; }
+    .today-badge { font-size: 0.45rem; padding: 1px 2px; }
+    .weight-display { font-size: 0.78rem; margin: 0; }
+    .weight-display small { font-size: 0.55rem; }
 
-    .calendar-wrapper {
-        padding: 10px;
-    }
-    
-    .days-grid, .weekdays-grid { 
-        gap: 3px; 
-    }
-    
-    .day-card { 
-        min-height: 72px; 
-        padding: 4px 2px; 
-        border-width: 1px; 
-        border-radius: 8px;
-    }
-    
-    .day-number { 
-        font-size: 0.8rem; 
-    }
-    
-    .today-badge { 
-        font-size: 0.5rem; 
-        padding: 1px 3px; 
-    }
-    
-    .weight-display { 
-        font-size: 0.85rem; 
-        margin: 1px 0; 
-    }
-    
-    .weight-display small { 
-        font-size: 0.6rem; 
-    }
-    
-    .icons-container { 
-        gap: 1px; 
-    }
-    
-    .icons-container span { 
-        font-size: 0.7rem; 
-    }
+    /* Ukrywanie zbiorczych ikon i wyświetlanie wykrzyknika na małym ekranie */
+    .icons-desktop { display: none; }
+    .icons-mobile { display: block; }
 }

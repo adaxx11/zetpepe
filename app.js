@@ -215,12 +215,17 @@ async function renderCalendar() {
         const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
         const isFuture = thisDayDate > todayMidnight;
 
-        let iconsHtml = "";
+        // Generowanie ikon dla komputera oraz pojedynczego wykrzyknika dla urządzeń mobilnych
+        let iconsDesktopHtml = "";
+        let hasAnyHabit = false;
+
         if (dayData.habits) {
-            if (dayData.habits.bike) iconsHtml += `<span>🏃</span>`;
-            if (dayData.habits.donut) iconsHtml += `<span>🍩</span>`;
-            if (dayData.habits.alcohol) iconsHtml += `<span>🍺</span>`;
+            if (dayData.habits.bike) { iconsDesktopHtml += `<span>🏃</span>`; hasAnyHabit = true; }
+            if (dayData.habits.donut) { iconsDesktopHtml += `<span>🍩</span>`; hasAnyHabit = true; }
+            if (dayData.habits.alcohol) { iconsDesktopHtml += `<span>🍺</span>`; hasAnyHabit = true; }
         }
+
+        const iconsMobileHtml = hasAnyHabit ? `<span class="mobile-alert-icon">❗</span>` : ``;
 
         card.innerHTML = `
             <div class="card-header">
@@ -231,11 +236,11 @@ async function renderCalendar() {
                 ${dayData.weight ? `${dayData.weight} <small>kg</small>` : '<span style="opacity:0.3;">--.-</span>'}
             </div>
             <div class="icons-container">
-                ${iconsHtml}
+                <div class="icons-desktop">${iconsDesktopHtml}</div>
+                <div class="icons-mobile">${iconsMobileHtml}</div>
             </div>
         `;
 
-        // Blokada klikania w dni z przyszłości
         if (isFuture) {
             card.classList.add('future-day');
         } else {
@@ -269,7 +274,6 @@ function setHabitState(btn, state) {
     btn.setAttribute('data-active', state ? "true" : "false");
 }
 
-// Przełączanie dowolnej kombinacji 3 zdarzeń
 [btnHabitBike, btnHabitDonut, btnHabitAlcohol].forEach(btn => {
     btn.addEventListener('click', () => {
         const curr = btn.getAttribute('data-active') === "true";
@@ -283,7 +287,20 @@ cancelModalBtn.onclick = () => editModal.classList.add('hidden');
 saveDayBtn.addEventListener('click', async () => {
     if (!selectedDateStr) return;
 
-    const weightVal = parseFloat(weightInput.value);
+    let weightVal = parseFloat(weightInput.value);
+
+    // Walidacja wagi: max 150 kg oraz zaokrąglenie do 1 miejsca po przecinku
+    if (!isNaN(weightVal)) {
+        if (weightVal > 150) {
+            alert("Maksymalna dozwolona waga to 150 kg!");
+            return;
+        }
+        if (weightVal < 0) weightVal = 0;
+        weightVal = Math.round(weightVal * 10) / 10;
+    } else {
+        weightVal = null;
+    }
+
     const bikeVal = btnHabitBike.getAttribute('data-active') === "true";
     const donutVal = btnHabitDonut.getAttribute('data-active') === "true";
     const alcoholVal = btnHabitAlcohol.getAttribute('data-active') === "true";
@@ -293,7 +310,7 @@ saveDayBtn.addEventListener('click', async () => {
     colorRadios.forEach(r => { if (r.checked) selectedColor = r.value; });
 
     const payload = {
-        weight: !isNaN(weightVal) ? weightVal : null,
+        weight: weightVal,
         color: selectedColor,
         habits: {
             bike: bikeVal,

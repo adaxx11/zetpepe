@@ -113,7 +113,7 @@ body {
 .error { color: #ef4444; font-size: 0.85rem; margin-top: 10px; }
 
 /* ==========================================================================
-   3. PRZYCISKI
+   3. PRZYCISKI (ZWIĘKSZONE PADDINGI)
    ========================================================================== */
 button {
     cursor: pointer;
@@ -123,13 +123,26 @@ button {
 }
 
 .full-width { width: 100%; padding: 12px; font-size: 1rem; }
-.btn-primary { background: var(--primary-color); color: white; }
+
+/* Zwiększony padding dla przycisków głównych i drugorzędnych */
+.btn-primary { 
+    background: var(--primary-color); 
+    color: white; 
+    padding: 10px 20px; 
+}
 .btn-primary:hover { background: var(--primary-hover); }
-.btn-secondary { background: var(--bg-main); color: var(--text-secondary); padding: 8px 16px; border: 1px solid var(--border-color); }
+
+.btn-secondary { 
+    background: var(--bg-main); 
+    color: var(--text-secondary); 
+    padding: 10px 20px; 
+    border: 1px solid var(--border-color); 
+}
+
 .btn-icon { background: var(--bg-main); color: var(--text-primary); padding: 8px 12px; font-size: 1rem; }
 
 /* ==========================================================================
-   4. KALENDARZ I KAFLI (JEDNAKOWE STAŁE WYMIARY)
+   4. KALENDARZ I DNI
    ========================================================================== */
 .top-header, .month-navigation {
     display: flex;
@@ -170,14 +183,13 @@ button {
     background-color: var(--bg-main);
     border: 2px solid var(--border-color);
     border-radius: 12px;
-    padding: 6px;
+    padding: 6px 4px 8px 4px; /* Zwiększony dolny odstęp wewnętrzny */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
     min-width: 0;
     overflow: hidden;
-    /* Sztywno wymuszone proporcje kafelka dla pełnej spójności */
     aspect-ratio: 1 / 1.15;
 }
 
@@ -229,6 +241,7 @@ button {
     justify-content: center;
     align-items: center;
     min-height: 20px;
+    margin-bottom: 2px; /* Margines od spodu kafla */
 }
 
 .icons-desktop {
@@ -246,7 +259,7 @@ button {
 }
 
 .mobile-alert-icon {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     line-height: 1;
 }
 
@@ -256,7 +269,7 @@ button {
 .day-card.status-red { background-color: var(--color-red-bg); border-color: var(--color-red-border); }
 
 /* ==========================================================================
-   5. MODAL
+   5. MODAL I PRZYCISKI OCENY DNIA
    ========================================================================== */
 .modal-overlay {
     position: fixed;
@@ -316,26 +329,55 @@ button {
     box-shadow: 0 0 0 1px var(--primary-color);
 }
 
-.color-picker { display: flex; gap: 8px; }
-.color-option { flex: 1; cursor: pointer; }
+/* PRZYCISKI OCENY DNIA - JEDNAKOWE, TEKST POD KÓŁKIEM */
+.color-picker { 
+    display: flex; 
+    gap: 8px; 
+    width: 100%;
+}
+
+.color-option { 
+    flex: 1; 
+    cursor: pointer; 
+}
+
 .color-option input { display: none; }
 
 .color-box {
-    display: block;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     padding: 10px 4px;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 0.78rem;
     font-weight: bold;
-    border: 2px solid transparent;
+    border: 2px solid var(--border-color);
     background: var(--bg-main);
+    text-align: center;
+    height: 100%;
 }
 
-.color-option input:checked + .color-box { border-color: var(--text-primary); }
-.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+.color-box .dot {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.color-option input:checked + .color-box { 
+    border-color: var(--text-primary); 
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.modal-footer { 
+    display: flex; 
+    justify-content: flex-end; 
+    gap: 10px; 
+    margin-top: 24px; 
+}
 
 /* ==========================================================================
-   6. WIDOK MOBILNY (PRZEŁĄCZANIE IKONEK NA VYKRZYKNIK)
+   6. WIDOK MOBILNY
    ========================================================================== */
 @media (max-width: 600px) {
     body { padding: 6px; }
@@ -343,16 +385,20 @@ button {
     .days-grid, .weekdays-grid { gap: 3px; }
     
     .day-card {
-        padding: 3px 2px;
+        padding: 4px 2px 6px 2px; /* Zabezpieczenie dolnej krawędzi kafla na telefonie */
         border-width: 1px;
-        border-radius: 6px;
-        aspect-ratio: 1 / 1.1;
+        border-radius: 8px;
+        aspect-ratio: 1 / 1.15;
     }
     
     .day-number { font-size: 0.75rem; }
     .today-badge { font-size: 0.45rem; padding: 1px 2px; }
     .weight-display { font-size: 0.78rem; margin: 0; }
     .weight-display small { font-size: 0.55rem; }
+
+    .icons-container {
+        margin-bottom: 1px;
+    }
 
     /* Ukrywanie zbiorczych ikon i wyświetlanie wykrzyknika na małym ekranie */
     .icons-desktop { display: none; }

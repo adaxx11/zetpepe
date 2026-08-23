@@ -32,7 +32,7 @@ const nextMonthBtn = document.getElementById('next-month-btn');
 const currentMonthDisplay = document.getElementById('current-month-display');
 const daysGrid = document.getElementById('days-grid');
 
-// Modal
+// Modal Edycji Dnia
 const editModal = document.getElementById('edit-modal');
 const modalDateDisplay = document.getElementById('modal-date-display');
 const weightInput = document.getElementById('weight-input');
@@ -43,11 +43,35 @@ const closeModalBtn = document.getElementById('close-modal-btn');
 const cancelModalBtn = document.getElementById('cancel-modal-btn');
 const saveDayBtn = document.getElementById('save-day-btn');
 
+// Modal Postanowienia
+const resolutionsToggleBtn = document.getElementById('resolutions-toggle');
+const resolutionsModal = document.getElementById('resolutions-modal');
+const closeResolutionsBtn = document.getElementById('close-resolutions-btn');
+const newResolutionInput = document.getElementById('new-resolution-input');
+const addResolutionBtn = document.getElementById('add-resolution-btn');
+const resolutionsListEl = document.getElementById('resolutions-list');
+const saveResolutionsBtn = document.getElementById('save-resolutions-btn');
+
+// Modal Statystyki
+const statsToggleBtn = document.getElementById('stats-toggle');
+const statsModal = document.getElementById('stats-modal');
+const closeStatsBtn = document.getElementById('close-stats-btn');
+const startWeightInput = document.getElementById('start-weight-input');
+const targetWeightSlider = document.getElementById('target-weight-slider');
+const targetWeightVal = document.getElementById('target-weight-val');
+const progressBarFill = document.getElementById('progress-bar-fill');
+const progressPercentText = document.getElementById('progress-percent-text');
+const statMonthDiff = document.getElementById('stat-month-diff');
+const statTotalDiff = document.getElementById('stat-total-diff');
+const saveStatsBtn = document.getElementById('save-stats-btn');
+
 // === 3. STAN APLIKACJI ===
 let currentUser = null;
 let currentDate = new Date();
 let selectedDateStr = null; 
 let monthDaysData = {}; 
+let allDaysData = {};
+let currentResolutions = [];
 
 function showScreen(screenName) {
     document.getElementById('screen-login').classList.add('hidden');
@@ -68,6 +92,8 @@ window.onload = async () => {
     const savedTheme = localStorage.getItem('zetpepeTheme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
+
+    setupDeselectableRadioButtons();
 
     const savedUser = localStorage.getItem('zetpepeUser');
     if (savedUser) {
@@ -90,7 +116,23 @@ function updateThemeIcon(theme) {
     themeToggleBtn.innerHTML = theme === 'light' ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
 }
 
-// === 5. OBSŁUGA LOGOWANIA I PINU ===
+// === 5. ODKLIKOWANIE OCEN DNIA (RADIO BUTTONS) ===
+function setupDeselectableRadioButtons() {
+    const radios = document.querySelectorAll('input[name="day-color"]');
+    radios.forEach(radio => {
+        radio.addEventListener('click', function() {
+            if (this.dataset.waschecked === "true") {
+                this.checked = false;
+                this.dataset.waschecked = "false";
+            } else {
+                radios.forEach(r => r.dataset.waschecked = "false");
+                this.dataset.waschecked = "true";
+            }
+        });
+    });
+}
+
+// === 6. OBSŁUGA LOGOWANIA I PINU ===
 loginBtn.addEventListener('click', async () => {
     const user = usernameInput.value.trim().toLowerCase();
     const pass = passwordInput.value.trim().toLowerCase();
@@ -152,7 +194,7 @@ logoutBtn.addEventListener('click', () => {
     showScreen('login');
 });
 
-// === 6. OBSŁUGA PULPITU I KALENDARZA ===
+// === 7. OBSŁUGA PULPITU I KALENDARZA ===
 async function showDashboard() {
     showScreen('dashboard');
     welcomeUsername.innerText = currentUser.name || currentUser.id;
@@ -179,11 +221,17 @@ async function renderCalendar() {
     currentMonthDisplay.innerText = `${monthNames[month]} ${year}`;
 
     monthDaysData = {};
+    allDaysData = {};
     try {
         const daysRef = collection(db, "users", currentUser.id, "days");
         const querySnapshot = await getDocs(daysRef);
         querySnapshot.forEach(docSnap => {
-            monthDaysData[docSnap.id] = docSnap.data();
+            const dateId = docSnap.id;
+            const data = docSnap.data();
+            allDaysData[dateId] = data;
+            if (dateId.startsWith(`${year}-${String(month + 1).padStart(2, '0')}`)) {
+                monthDaysData[dateId] = data;
+            }
         });
     } catch (e) { console.error("Błąd pobierania kalendarza:", e); }
 
@@ -215,7 +263,6 @@ async function renderCalendar() {
         const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
         const isFuture = thisDayDate > todayMidnight;
 
-        // Generowanie ikon dla komputera oraz pojedynczego wykrzyknika dla urządzeń mobilnych
         let iconsDesktopHtml = "";
         let hasAnyHabit = false;
 
@@ -251,7 +298,7 @@ async function renderCalendar() {
     }
 }
 
-// === 7. OBSŁUGA MODALA EDYCJI DNIA ===
+// === 8. OBSŁUGA MODALA EDYCJI DNIA ===
 function openModal(dateStr, data) {
     selectedDateStr = dateStr;
     modalDateDisplay.innerText = dateStr;
@@ -264,7 +311,9 @@ function openModal(dateStr, data) {
 
     const colorRadios = document.getElementsByName('day-color');
     colorRadios.forEach(r => {
-        r.checked = (r.value === data.color);
+        const isChecked = (r.value === data.color);
+        r.checked = isChecked;
+        r.dataset.waschecked = isChecked ? "true" : "false";
     });
 
     editModal.classList.remove('hidden');
@@ -289,7 +338,6 @@ saveDayBtn.addEventListener('click', async () => {
 
     let weightVal = parseFloat(weightInput.value);
 
-    // Walidacja wagi: max 150 kg oraz zaokrąglenie do 1 miejsca po przecinku
     if (!isNaN(weightVal)) {
         if (weightVal > 150) {
             alert("Maksymalna dozwolona waga to 150 kg!");
@@ -329,5 +377,179 @@ saveDayBtn.addEventListener('click', async () => {
     } catch (e) {
         console.error("Błąd zapisu dnia:", e);
         alert("Błąd zapisu danych!");
+    }
+});
+
+// === 9. OBSŁUGA MODALA POSTANOWIENIA ===
+resolutionsToggleBtn.addEventListener('click', async () => {
+    await fetchResolutions();
+    renderResolutionsList();
+    resolutionsModal.classList.remove('hidden');
+});
+
+closeResolutionsBtn.onclick = () => resolutionsModal.classList.add('hidden');
+
+async function fetchResolutions() {
+    try {
+        const userRef = doc(db, "users", currentUser.id);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists() && userSnap.data().resolutions) {
+            currentResolutions = userSnap.data().resolutions;
+        } else {
+            currentResolutions = ["Zero słodyczy", "Zero alkoholu", "Codzienne pomiary wagi"];
+        }
+    } catch (e) {
+        console.error("Błąd pobierania postanowień:", e);
+    }
+}
+
+function renderResolutionsList() {
+    resolutionsListEl.innerHTML = "";
+    currentResolutions.forEach((resText, index) => {
+        const li = document.createElement('li');
+        li.className = 'resolution-item';
+        li.innerHTML = `
+            <input type="text" value="${resText}" data-index="${index}" class="res-text-input">
+            <button class="delete-res-btn" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
+        `;
+        resolutionsListEl.appendChild(li);
+    });
+
+    document.querySelectorAll('.res-text-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+            const idx = e.target.getAttribute('data-index');
+            currentResolutions[idx] = e.target.value;
+        });
+    });
+
+    document.querySelectorAll('.delete-res-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = e.currentTarget.getAttribute('data-index');
+            currentResolutions.splice(idx, 1);
+            renderResolutionsList();
+        });
+    });
+}
+
+addResolutionBtn.addEventListener('click', () => {
+    const val = newResolutionInput.value.trim();
+    if (val) {
+        currentResolutions.push(val);
+        newResolutionInput.value = "";
+        renderResolutionsList();
+    }
+});
+
+saveResolutionsBtn.addEventListener('click', async () => {
+    try {
+        const cleanResolutions = currentResolutions.map(r => r.trim()).filter(r => r.length > 0);
+        const userRef = doc(db, "users", currentUser.id);
+        await updateDoc(userRef, { resolutions: cleanResolutions });
+        currentUser.resolutions = cleanResolutions;
+        localStorage.setItem('zetpepeUser', JSON.stringify(currentUser));
+        resolutionsModal.classList.add('hidden');
+    } catch (e) {
+        console.error("Błąd zapisu postanowień:", e);
+        alert("Wystąpił błąd podczas zapisu postanowień!");
+    }
+});
+
+// === 10. OBSŁUGA MODALA STATYSTYKI ===
+statsToggleBtn.addEventListener('click', async () => {
+    await loadStatsData();
+    statsModal.classList.remove('hidden');
+});
+
+closeStatsBtn.onclick = () => statsModal.classList.add('hidden');
+
+async function loadStatsData() {
+    let startWeight = currentUser.startWeight || 90;
+    let targetWeight = currentUser.targetWeight || 80;
+
+    startWeightInput.value = startWeight;
+    targetWeightSlider.value = targetWeight;
+    targetWeightVal.innerText = targetWeight;
+
+    updateStatsCalculations();
+}
+
+targetWeightSlider.addEventListener('input', (e) => {
+    targetWeightVal.innerText = e.target.value;
+    updateStatsCalculations();
+});
+
+startWeightInput.addEventListener('input', () => {
+    updateStatsCalculations();
+});
+
+function updateStatsCalculations() {
+    const startW = parseFloat(startWeightInput.value) || 0;
+    const targetW = parseFloat(targetWeightSlider.value) || 0;
+
+    // Pobranie chronologicznie posortowanych pomiarów wagi
+    const sortedDates = Object.keys(allDaysData)
+        .filter(d => allDaysData[d].weight !== null && allDaysData[d].weight !== undefined)
+        .sort();
+
+    let latestWeight = startW;
+    if (sortedDates.length > 0) {
+        latestWeight = allDaysData[sortedDates[sortedDates.length - 1]].weight;
+    }
+
+    // Calculacja postępu (%)
+    let progressPercent = 0;
+    const totalToLose = startW - targetW;
+    const lostSoFar = startW - latestWeight;
+
+    if (totalToLose > 0) {
+        progressPercent = Math.min(100, Math.max(0, (lostSoFar / totalToLose) * 100));
+    }
+    progressBarFill.style.width = `${progressPercent.toFixed(1)}%`;
+    progressPercentText.innerText = `${progressPercent.toFixed(1)}%`;
+
+    // Calculacja różnicy od startu
+    const totalDiff = latestWeight - startW;
+    const totalDiffStr = (totalDiff > 0 ? `+${totalDiff.toFixed(1)}` : `${totalDiff.toFixed(1)}`) + " kg";
+    statTotalDiff.innerText = totalDiffStr;
+    statTotalDiff.style.color = totalDiff <= 0 ? "#10b981" : "#ef4444";
+
+    // Calculacja różnicy w bieżącym miesiącu
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const monthDates = sortedDates.filter(d => d.startsWith(`${year}-${month}`));
+
+    if (monthDates.length >= 2) {
+        const firstMonthW = allDaysData[monthDates[0]].weight;
+        const lastMonthW = allDaysData[monthDates[monthDates.length - 1]].weight;
+        const monthDiff = lastMonthW - firstMonthW;
+        const monthDiffStr = (monthDiff > 0 ? `+${monthDiff.toFixed(1)}` : `${monthDiff.toFixed(1)}`) + " kg";
+        statMonthDiff.innerText = monthDiffStr;
+        statMonthDiff.style.color = monthDiff <= 0 ? "#10b981" : "#ef4444";
+    } else if (monthDates.length === 1) {
+        statMonthDiff.innerText = "0.0 kg";
+        statMonthDiff.style.color = "var(--text-primary)";
+    } else {
+        statMonthDiff.innerText = "-- kg";
+        statMonthDiff.style.color = "var(--text-secondary)";
+    }
+}
+
+saveStatsBtn.addEventListener('click', async () => {
+    const startW = parseFloat(startWeightInput.value);
+    const targetW = parseFloat(targetWeightSlider.value);
+
+    try {
+        const userRef = doc(db, "users", currentUser.id);
+        await updateDoc(userRef, {
+            startWeight: startW,
+            targetWeight: targetW
+        });
+        currentUser.startWeight = startW;
+        currentUser.targetWeight = targetW;
+        localStorage.setItem('zetpepeUser', JSON.stringify(currentUser));
+        statsModal.classList.add('hidden');
+    } catch (e) {
+        console.error("Błąd zapisu statystyk:", e);
+        alert("Nie udało się zapisać ustawień statystyk!");
     }
 });

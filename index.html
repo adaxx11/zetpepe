@@ -31,7 +31,7 @@
                 <p>To Twoje pierwsze logowanie! Ustaw 4-cyfrowy PIN, którym będziesz logować się w przyszłości.</p>
                 <input type="text" id="new-pin" maxlength="4" placeholder="Wpisz 4 cyfry PINu" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 <button id="save-pin-btn" class="btn-primary full-width">Zapisz PIN i wejdź</button>
-                <p id="pin-error" class="error hidden">PIN musi składać się z 4 cyfr!</p>
+                <p id="pin-error" class="error hidden">PIN musi składania się z 4 cyfr!</p>
             </div>
         </section>
 
@@ -44,6 +44,12 @@
                     <span class="welcome-text">ŻPP: <strong id="welcome-username">...</strong></span>
                 </div>
                 <div class="header-controls">
+                    <button id="resolutions-toggle" class="btn-icon" title="Postanowienia">
+                        <i class="fa-solid fa-list-check"></i>
+                    </button>
+                    <button id="stats-toggle" class="btn-icon" title="Statystyki">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </button>
                     <button id="theme-toggle" class="btn-icon" title="Przełącz motyw">
                         <i class="fa-solid fa-moon"></i>
                     </button>
@@ -87,7 +93,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="weight-input">Dzisiejsza waga (max 150 kg):</label>
-                    <input type="number" id="weight-input" min="0" max="150" step="0.1" placeholder="np. 82.5">
+                    <input type="number" id="weight-input" min="0" max="150" step="0.1" inputmode="decimal" placeholder="np. 82.5">
                 </div>
 
                 <div class="form-group">
@@ -106,36 +112,103 @@
                 </div>
 
                 <div class="form-group">
-    <label>Ocena dnia:</label>
-    <div class="color-picker">
-        <label class="color-option green-option">
-            <input type="radio" name="day-color" value="green">
-            <span class="color-box">
-                <span class="dot">🟢</span>
-                <span>idealnie</span>
-            </span>
-        </label>
-        <label class="color-option orange-option">
-            <input type="radio" name="day-color" value="orange">
-            <span class="color-box">
-                <span class="dot">🟠</span>
-                <span>była wtopa</span>
-            </span>
-        </label>
-        <label class="color-option red-option">
-            <input type="radio" name="day-color" value="red">
-            <span class="color-box">
-                <span class="dot">🔴</span>
-                <span>dzień stracony</span>
-            </span>
-        </label>
-    </div>
-</div>
+                    <label>Ocena dnia:</label>
+                    <div class="color-picker">
+                        <label class="color-option green-option">
+                            <input type="radio" name="day-color" value="green">
+                            <span class="color-box">
+                                <span class="dot">🟢</span>
+                                <span>idealnie</span>
+                            </span>
+                        </label>
+                        <label class="color-option orange-option">
+                            <input type="radio" name="day-color" value="orange">
+                            <span class="color-box">
+                                <span class="dot">🟠</span>
+                                <span>była wtopa</span>
+                            </span>
+                        </label>
+                        <label class="color-option red-option">
+                            <input type="radio" name="day-color" value="red">
+                            <span class="color-box">
+                                <span class="dot">🔴</span>
+                                <span>dzień stracony</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer">
                 <button class="btn-secondary" id="cancel-modal-btn">Anuluj</button>
                 <button class="btn-primary" id="save-day-btn">Zapisz dzień</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: POSTANOWIENIA -->
+    <div id="resolutions-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Moje Postanowienia</h3>
+                <button class="close-btn" id="close-resolutions-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="add-resolution-box">
+                    <input type="text" id="new-resolution-input" placeholder="Wpisz nowe postanowienie...">
+                    <button id="add-resolution-btn" class="btn-primary"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                <ul id="resolutions-list" class="resolutions-list"></ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="save-resolutions-btn">Zapisz postanowienia</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: STATYSTYKI -->
+    <div id="stats-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📊 Statystyki i Cele</h3>
+                <button class="close-btn" id="close-stats-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="start-weight-input">Waga początkowa (Start odchudzania):</label>
+                    <input type="number" id="start-weight-input" step="0.1" inputmode="decimal" placeholder="np. 95.0">
+                </div>
+
+                <div class="form-group">
+                    <label>Cel wagi: <strong id="target-weight-val">80</strong> kg</label>
+                    <input type="range" id="target-weight-slider" min="40" max="140" step="0.5" class="range-slider">
+                </div>
+
+                <div class="stats-section">
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Postęp do celu:</span>
+                            <span id="progress-percent-text">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="stats-cards-grid">
+                        <div class="stat-card">
+                            <span class="stat-title">Różnica w tym miesiącu</span>
+                            <span id="stat-month-diff" class="stat-value">-- kg</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-title">Różnica od startu</span>
+                            <span id="stat-total-diff" class="stat-value">-- kg</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="save-stats-btn">Zapisz ustawienia</button>
             </div>
         </div>
     </div>

@@ -71,9 +71,7 @@ body {
 /* ==========================================================================
    2. PANELE LOGOWANIA I PIN-U
    ========================================================================== */
-.app-screen {
-    width: 100%;
-}
+.app-screen { width: 100%; }
 
 #screen-login, #screen-pin {
     display: flex;
@@ -113,7 +111,7 @@ body {
 .error { color: #ef4444; font-size: 0.85rem; margin-top: 10px; }
 
 /* ==========================================================================
-   3. PRZYCISKI (ZWIĘKSZONE PADDINGI)
+   3. PRZYCISKI
    ========================================================================== */
 button {
     cursor: pointer;
@@ -124,7 +122,6 @@ button {
 
 .full-width { width: 100%; padding: 12px; font-size: 1rem; }
 
-/* Zwiększony padding dla przycisków głównych i drugorzędnych */
 .btn-primary { 
     background: var(--primary-color); 
     color: white; 
@@ -139,7 +136,20 @@ button {
     border: 1px solid var(--border-color); 
 }
 
-.btn-icon { background: var(--bg-main); color: var(--text-primary); padding: 8px 12px; font-size: 1rem; }
+.header-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-icon { 
+    background: var(--bg-main); 
+    color: var(--text-primary); 
+    padding: 8px 12px; 
+    font-size: 1rem; 
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
 
 /* ==========================================================================
    4. KALENDARZ I DNI
@@ -183,7 +193,7 @@ button {
     background-color: var(--bg-main);
     border: 2px solid var(--border-color);
     border-radius: 12px;
-    padding: 6px 4px 8px 4px; /* Zwiększony dolny odstęp wewnętrzny */
+    padding: 6px 4px 8px 4px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -241,35 +251,21 @@ button {
     justify-content: center;
     align-items: center;
     min-height: 20px;
-    margin-bottom: 2px; /* Margines od spodu kafla */
+    margin-bottom: 2px;
 }
 
-.icons-desktop {
-    display: flex;
-    gap: 2px;
-}
+.icons-desktop { display: flex; gap: 2px; }
+.icons-desktop span { font-size: 0.85rem; line-height: 1; }
+.icons-mobile { display: none; }
+.mobile-alert-icon { font-size: 0.85rem; line-height: 1; }
 
-.icons-desktop span {
-    font-size: 0.85rem;
-    line-height: 1;
-}
-
-.icons-mobile {
-    display: none;
-}
-
-.mobile-alert-icon {
-    font-size: 0.85rem;
-    line-height: 1;
-}
-
-/* Kolory statusów */
+/* Statusy kolorów */
 .day-card.status-green { background-color: var(--color-green-bg); border-color: var(--color-green-border); }
 .day-card.status-orange { background-color: var(--color-orange-bg); border-color: var(--color-orange-border); }
 .day-card.status-red { background-color: var(--color-red-bg); border-color: var(--color-red-border); }
 
 /* ==========================================================================
-   5. MODAL I PRZYCISKI OCENY DNIA
+   5. MODALE I ELEMNTY FORMULARZY
    ========================================================================== */
 .modal-overlay {
     position: fixed;
@@ -284,18 +280,18 @@ button {
 .modal-content {
     background: var(--bg-card);
     width: 90%;
-    max-width: 420px;
+    max-width: 440px;
     border-radius: 16px;
     padding: 24px;
     box-shadow: var(--shadow);
 }
 
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.close-btn { background: none; font-size: 1.5rem; color: var(--text-secondary); }
+.close-btn { background: none; font-size: 1.5rem; color: var(--text-secondary); border: none; cursor: pointer; }
 
 .form-group { margin-bottom: 18px; }
 .form-group label { display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; }
-.form-group input[type="number"] {
+.form-group input[type="number"], .form-group input[type="text"] {
     width: 100%;
     padding: 10px 12px;
     border-radius: 8px;
@@ -329,18 +325,9 @@ button {
     box-shadow: 0 0 0 1px var(--primary-color);
 }
 
-/* PRZYCISKI OCENY DNIA - JEDNAKOWE, TEKST POD KÓŁKIEM */
-.color-picker { 
-    display: flex; 
-    gap: 8px; 
-    width: 100%;
-}
-
-.color-option { 
-    flex: 1; 
-    cursor: pointer; 
-}
-
+/* Oceny dnia */
+.color-picker { display: flex; gap: 8px; width: 100%; }
+.color-option { flex: 1; cursor: pointer; }
 .color-option input { display: none; }
 
 .color-box {
@@ -359,22 +346,115 @@ button {
     height: 100%;
 }
 
-.color-box .dot {
-    font-size: 1.1rem;
-    line-height: 1;
-}
+.color-box .dot { font-size: 1.1rem; line-height: 1; }
 
 .color-option input:checked + .color-box { 
     border-color: var(--text-primary); 
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 0 2px var(--text-primary);
 }
 
-.modal-footer { 
-    display: flex; 
-    justify-content: flex-end; 
-    gap: 10px; 
-    margin-top: 24px; 
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+
+/* MODAL POSTANOWIENIA */
+.add-resolution-box {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
 }
+.add-resolution-box input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-main);
+    color: var(--text-primary);
+}
+
+.resolutions-list {
+    list-style: none;
+    max-height: 250px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.resolution-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-main);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+.resolution-item input[type="text"] {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    outline: none;
+}
+.delete-res-btn {
+    background: none;
+    border: none;
+    color: var(--color-red-border);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px;
+}
+
+/* MODAL STATYSTYKI */
+.range-slider {
+    width: 100%;
+    margin-top: 8px;
+    accent-color: var(--primary-color);
+}
+
+.stats-section {
+    margin-top: 20px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+}
+
+.progress-container { margin-bottom: 16px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; margin-bottom: 6px; }
+
+.progress-bar-bg {
+    width: 100%;
+    height: 14px;
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), #10b981);
+    transition: width 0.3s ease;
+}
+
+.stats-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.stat-card {
+    background: var(--bg-main);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.stat-title { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; }
+.stat-value { font-size: 1.1rem; font-weight: bold; color: var(--text-primary); }
 
 /* ==========================================================================
    6. WIDOK MOBILNY
@@ -385,7 +465,7 @@ button {
     .days-grid, .weekdays-grid { gap: 3px; }
     
     .day-card {
-        padding: 4px 2px 6px 2px; /* Zabezpieczenie dolnej krawędzi kafla na telefonie */
+        padding: 4px 2px 6px 2px;
         border-width: 1px;
         border-radius: 8px;
         aspect-ratio: 1 / 1.15;
@@ -396,11 +476,7 @@ button {
     .weight-display { font-size: 0.78rem; margin: 0; }
     .weight-display small { font-size: 0.55rem; }
 
-    .icons-container {
-        margin-bottom: 1px;
-    }
-
-    /* Ukrywanie zbiorczych ikon i wyświetlanie wykrzyknika na małym ekranie */
+    .icons-container { margin-bottom: 1px; }
     .icons-desktop { display: none; }
     .icons-mobile { display: block; }
 }

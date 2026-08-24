@@ -15,6 +15,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Słownik ikonek dla zdarzeń
+const EVENT_ICONS = {
+    bike: '🚴',
+    walk: '🚶',
+    run: '🏃',
+    swim: '🏊',
+    workout: '🏋️',
+    donut: '🍩',
+    alcohol: '🍺',
+    snacks: '🍿',
+    restaurant: '🍽️',
+    fastfood: '🍔',
+    nightfood: '🌙'
+};
+
 // === 2. ELEMENTY INTERFEJSU (DOM) ===
 const usernameInput = document.getElementById('username');
 const passwordInput = document.getElementById('password');
@@ -36,9 +51,7 @@ const daysGrid = document.getElementById('days-grid');
 const editModal = document.getElementById('edit-modal');
 const modalDateDisplay = document.getElementById('modal-date-display');
 const weightInput = document.getElementById('weight-input');
-const btnHabitBike = document.getElementById('btn-habit-bike');
-const btnHabitDonut = document.getElementById('btn-habit-donut');
-const btnHabitAlcohol = document.getElementById('btn-habit-alcohol');
+const eventSelect = document.getElementById('event-select');
 const closeModalBtn = document.getElementById('close-modal-btn');
 const cancelModalBtn = document.getElementById('cancel-modal-btn');
 const saveDayBtn = document.getElementById('save-day-btn');
@@ -266,8 +279,12 @@ async function renderCalendar() {
         let iconsDesktopHtml = "";
         let hasAnyHabit = false;
 
-        if (dayData.habits) {
-            if (dayData.habits.bike) { iconsDesktopHtml += `<span>🏃</span>`; hasAnyHabit = true; }
+        // Obsługa pojedynczego zdarzenia lub starszej struktury (habits)
+        if (dayData.event && EVENT_ICONS[dayData.event]) {
+            iconsDesktopHtml += `<span>${EVENT_ICONS[dayData.event]}</span>`;
+            hasAnyHabit = true;
+        } else if (dayData.habits) {
+            if (dayData.habits.bike) { iconsDesktopHtml += `<span>🚴</span>`; hasAnyHabit = true; }
             if (dayData.habits.donut) { iconsDesktopHtml += `<span>🍩</span>`; hasAnyHabit = true; }
             if (dayData.habits.alcohol) { iconsDesktopHtml += `<span>🍺</span>`; hasAnyHabit = true; }
         }
@@ -280,7 +297,7 @@ async function renderCalendar() {
                 ${isToday ? '<span class="today-badge">Dziś</span>' : ''}
             </div>
             <div class="weight-display">
-                ${dayData.weight ? `${dayData.weight} <small>kg</small>` : '<span style="opacity:0.3;">--.-</span>'}
+                ${dayData.weight ? `${dayData.weight}` : '<span style="opacity:0.3;">--.-</span>'}
             </div>
             <div class="icons-container">
                 <div class="icons-desktop">${iconsDesktopHtml}</div>
@@ -305,9 +322,14 @@ function openModal(dateStr, data) {
 
     weightInput.value = data.weight || '';
 
-    setHabitState(btnHabitBike, data.habits?.bike || false);
-    setHabitState(btnHabitDonut, data.habits?.donut || false);
-    setHabitState(btnHabitAlcohol, data.habits?.alcohol || false);
+    // Pobranie wartości zdarzenia z nowego pola lub kompatybilność ze starym polem habits
+    let activeEvent = data.event || '';
+    if (!activeEvent && data.habits) {
+        if (data.habits.bike) activeEvent = 'bike';
+        else if (data.habits.donut) activeEvent = 'donut';
+        else if (data.habits.alcohol) activeEvent = 'alcohol';
+    }
+    eventSelect.value = activeEvent;
 
     const colorRadios = document.getElementsByName('day-color');
     colorRadios.forEach(r => {
@@ -318,17 +340,6 @@ function openModal(dateStr, data) {
 
     editModal.classList.remove('hidden');
 }
-
-function setHabitState(btn, state) {
-    btn.setAttribute('data-active', state ? "true" : "false");
-}
-
-[btnHabitBike, btnHabitDonut, btnHabitAlcohol].forEach(btn => {
-    btn.addEventListener('click', () => {
-        const curr = btn.getAttribute('data-active') === "true";
-        btn.setAttribute('data-active', !curr ? "true" : "false");
-    });
-});
 
 closeModalBtn.onclick = () => editModal.classList.add('hidden');
 cancelModalBtn.onclick = () => editModal.classList.add('hidden');
@@ -349,9 +360,7 @@ saveDayBtn.addEventListener('click', async () => {
         weightVal = null;
     }
 
-    const bikeVal = btnHabitBike.getAttribute('data-active') === "true";
-    const donutVal = btnHabitDonut.getAttribute('data-active') === "true";
-    const alcoholVal = btnHabitAlcohol.getAttribute('data-active') === "true";
+    const selectedEvent = eventSelect.value;
 
     let selectedColor = "";
     const colorRadios = document.getElementsByName('day-color');
@@ -360,10 +369,12 @@ saveDayBtn.addEventListener('click', async () => {
     const payload = {
         weight: weightVal,
         color: selectedColor,
+        event: selectedEvent,
+        // Zachowanie wstecznej kompatybilności dla starszych odczytów
         habits: {
-            bike: bikeVal,
-            donut: donutVal,
-            alcohol: alcoholVal
+            bike: selectedEvent === 'bike',
+            donut: selectedEvent === 'donut',
+            alcohol: selectedEvent === 'alcohol'
         },
         updatedAt: new Date().toISOString()
     };

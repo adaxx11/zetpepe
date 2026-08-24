@@ -291,7 +291,7 @@ button {
 
 .form-group { margin-bottom: 18px; }
 .form-group label { display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; }
-.form-group input[type="number"], .form-group input[type="text"] {
+.form-group input[type="number"], .form-group input[type="text"], .form-group select {
     width: 100%;
     padding: 10px 12px;
     border-radius: 8px;
@@ -299,30 +299,11 @@ button {
     background: var(--bg-main);
     color: var(--text-primary);
     font-size: 1.05rem;
+    outline: none;
 }
 
-.habit-toggles { display: flex; gap: 8px; }
-
-.toggle-btn {
-    flex: 1;
-    padding: 10px 4px;
-    background: var(--bg-main);
-    border: 2px solid var(--border-color);
-    border-radius: 10px;
-    color: var(--text-primary);
-    font-size: 0.85rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-}
-
-.toggle-btn[data-active="true"] {
+.form-group select:focus {
     border-color: var(--primary-color);
-    background-color: rgba(37, 99, 235, 0.08);
-    font-weight: bold;
-    box-shadow: 0 0 0 1px var(--primary-color);
 }
 
 /* Oceny dnia */
@@ -474,7 +455,6 @@ button {
     .day-number { font-size: 0.75rem; }
     .today-badge { font-size: 0.45rem; padding: 1px 2px; }
     .weight-display { font-size: 0.78rem; margin: 0; }
-    .weight-display small { font-size: 0.55rem; }
 
     .icons-container { margin-bottom: 1px; }
     .icons-desktop { display: none; }

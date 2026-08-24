@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <link rel="icon" type="image/svg+xml" href="/zetpepe/favicon.svg" sizes="any" >
+    <link rel="icon" type="image/svg+xml" href="/zetpepe/favicon.svg" sizes="any">
 </head>
 <body>
 
@@ -93,23 +93,26 @@
             
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="weight-input">Dzisiejsza waga (max 150 kg):</label>
+                    <label for="weight-input">Waga:</label>
                     <input type="number" id="weight-input" min="0" max="150" step="0.1" inputmode="decimal" placeholder="np. 82.5">
                 </div>
 
                 <div class="form-group">
-                    <label>Zdarzenia dnia:</label>
-                    <div class="habit-toggles">
-                        <button type="button" class="toggle-btn" id="btn-habit-bike" data-active="false">
-                            <span class="icon">🏃</span> Aktywność
-                        </button>
-                        <button type="button" class="toggle-btn" id="btn-habit-donut" data-active="false">
-                            <span class="icon">🍩</span> Słodycze
-                        </button>
-                        <button type="button" class="toggle-btn" id="btn-habit-alcohol" data-active="false">
-                            <span class="icon">🍺</span> Alkohol
-                        </button>
-                    </div>
+                    <label for="event-select">Zdarzenia dnia:</label>
+                    <select id="event-select" class="form-select">
+                        <option value="">-- Brak zdarzenia --</option>
+                        <option value="bike">🚴 Rower</option>
+                        <option value="walk">🚶 Spacer</option>
+                        <option value="run">🏃 Bieganie</option>
+                        <option value="swim">🏊 Pływanie</option>
+                        <option value="workout">🏋️ Ćwiczenia</option>
+                        <option value="donut">🍩 Słodycze</option>
+                        <option value="alcohol">🍺 Alkohol</option>
+                        <option value="snacks">🍿 Przekąski</option>
+                        <option value="restaurant">🍽️ Restauracja</option>
+                        <option value="fastfood">🍔 Fastfood</option>
+                        <option value="nightfood">🌙 Jedzenie w nocy</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -119,21 +122,21 @@
                             <input type="radio" name="day-color" value="green">
                             <span class="color-box">
                                 <span class="dot">🟢</span>
-                                <span>idealnie</span>
+                                <span>Idealnie</span>
                             </span>
                         </label>
                         <label class="color-option orange-option">
                             <input type="radio" name="day-color" value="orange">
                             <span class="color-box">
                                 <span class="dot">🟠</span>
-                                <span>była wtopa</span>
+                                <span>Była wtopa</span>
                             </span>
                         </label>
                         <label class="color-option red-option">
                             <input type="radio" name="day-color" value="red">
                             <span class="color-box">
                                 <span class="dot">🔴</span>
-                                <span>dzień stracony</span>
+                                <span>Dzień stracony</span>
                             </span>
                         </label>
                     </div>

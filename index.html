@@ -32,7 +32,7 @@
                 <p>To Twoje pierwsze logowanie! Ustaw 4-cyfrowy PIN, którym będziesz logować się w przyszłości.</p>
                 <input type="text" id="new-pin" maxlength="4" placeholder="Wpisz 4 cyfry PINu" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 <button id="save-pin-btn" class="btn-primary full-width">Zapisz PIN i wejdź</button>
-                <p id="pin-error" class="error hidden">PIN musi składania się z 4 cyfr!</p>
+                <p id="pin-error" class="error hidden">PIN musi składać się z 4 cyfr!</p>
             </div>
         </section>
 
@@ -98,21 +98,26 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="event-select">Zdarzenia dnia:</label>
-                    <select id="event-select" class="form-select">
-                        <option value="">-- Brak zdarzenia --</option>
-                        <option value="bike">🚴 Rower</option>
-                        <option value="walk">🚶 Spacer</option>
-                        <option value="run">🏃 Bieganie</option>
-                        <option value="swim">🏊 Pływanie</option>
-                        <option value="workout">🏋️ Ćwiczenia</option>
-                        <option value="donut">🍩 Słodycze</option>
-                        <option value="alcohol">🍺 Alkohol</option>
-                        <option value="snacks">🍿 Przekąski</option>
-                        <option value="restaurant">🍽️ Restauracja</option>
-                        <option value="fastfood">🍔 Fastfood</option>
-                        <option value="nightfood">🌙 Jedzenie w nocy</option>
-                    </select>
+                    <label>Zdarzenia dnia (wybierz wiele):</label>
+                    <div class="custom-multiselect" id="events-multiselect">
+                        <div class="multiselect-trigger" id="events-trigger">
+                            <span id="events-trigger-text">-- Wybierz zdarzenia --</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="multiselect-dropdown hidden" id="events-dropdown">
+                            <label class="multiselect-option"><input type="checkbox" value="bike"> 🚴 Rower</label>
+                            <label class="multiselect-option"><input type="checkbox" value="walk"> 🚶 Spacer</label>
+                            <label class="multiselect-option"><input type="checkbox" value="run"> 🏃 Bieganie</label>
+                            <label class="multiselect-option"><input type="checkbox" value="swim"> 🏊 Pływanie</label>
+                            <label class="multiselect-option"><input type="checkbox" value="workout"> 🏋️ Ćwiczenia</label>
+                            <label class="multiselect-option"><input type="checkbox" value="donut"> 🍩 Słodycze</label>
+                            <label class="multiselect-option"><input type="checkbox" value="alcohol"> 🍺 Alkohol</label>
+                            <label class="multiselect-option"><input type="checkbox" value="snacks"> 🍿 Przekąski</label>
+                            <label class="multiselect-option"><input type="checkbox" value="restaurant"> 🍽️ Restauracja</label>
+                            <label class="multiselect-option"><input type="checkbox" value="fastfood"> 🍔 Fastfood</label>
+                            <label class="multiselect-option"><input type="checkbox" value="nightfood"> 🌙 Jedzenie w nocy</label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">

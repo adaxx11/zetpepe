@@ -30,6 +30,20 @@ const EVENT_ICONS = {
     nightfood: '🌙'
 };
 
+const EVENT_LABELS = {
+    bike: '🚴 Rower',
+    walk: '🚶 Spacer',
+    run: '🏃 Bieganie',
+    swim: '🏊 Pływanie',
+    workout: '🏋️ Ćwiczenia',
+    donut: '🍩 Słodycze',
+    alcohol: '🍺 Alkohol',
+    snacks: '🍿 Przekąski',
+    restaurant: '🍽️ Restauracja',
+    fastfood: '🍔 Fastfood',
+    nightfood: '🌙 Jedzenie w nocy'
+};
+
 // === 2. ELEMENTY INTERFEJSU (DOM) ===
 const usernameInput = document.getElementById('username');
 const passwordInput = document.getElementById('password');
@@ -47,11 +61,13 @@ const nextMonthBtn = document.getElementById('next-month-btn');
 const currentMonthDisplay = document.getElementById('current-month-display');
 const daysGrid = document.getElementById('days-grid');
 
-// Modal Edycji Dnia
+// Modal Edycji Dnia & Multi-Select
 const editModal = document.getElementById('edit-modal');
 const modalDateDisplay = document.getElementById('modal-date-display');
 const weightInput = document.getElementById('weight-input');
-const eventSelect = document.getElementById('event-select');
+const eventsTrigger = document.getElementById('events-trigger');
+const eventsTriggerText = document.getElementById('events-trigger-text');
+const eventsDropdown = document.getElementById('events-dropdown');
 const closeModalBtn = document.getElementById('close-modal-btn');
 const cancelModalBtn = document.getElementById('cancel-modal-btn');
 const saveDayBtn = document.getElementById('save-day-btn');
@@ -107,6 +123,7 @@ window.onload = async () => {
     updateThemeIcon(savedTheme);
 
     setupDeselectableRadioButtons();
+    setupMultiSelectDropdown();
 
     const savedUser = localStorage.getItem('zetpepeUser');
     if (savedUser) {
@@ -129,7 +146,7 @@ function updateThemeIcon(theme) {
     themeToggleBtn.innerHTML = theme === 'light' ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
 }
 
-// === 5. ODKLIKOWANIE OCEN DNIA (RADIO BUTTONS) ===
+// === 5. MULTI-SELECT & ODKLIKOWANIE OCEN DNIA ===
 function setupDeselectableRadioButtons() {
     const radios = document.querySelectorAll('input[name="day-color"]');
     radios.forEach(radio => {
@@ -143,6 +160,34 @@ function setupDeselectableRadioButtons() {
             }
         });
     });
+}
+
+function setupMultiSelectDropdown() {
+    eventsTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        eventsDropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!document.getElementById('events-multiselect').contains(e.target)) {
+            eventsDropdown.classList.add('hidden');
+        }
+    });
+
+    const checkboxes = eventsDropdown.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateMultiSelectTriggerText);
+    });
+}
+
+function updateMultiSelectTriggerText() {
+    const checked = Array.from(eventsDropdown.querySelectorAll('input[type="checkbox"]:checked'));
+    if (checked.length === 0) {
+        eventsTriggerText.innerText = "-- Wybierz zdarzenia --";
+    } else {
+        const labels = checked.map(cb => EVENT_ICONS[cb.value] || cb.value);
+        eventsTriggerText.innerText = labels.join(" ");
+    }
 }
 
 // === 6. OBSŁUGA LOGOWANIA I PINU ===
@@ -276,20 +321,25 @@ async function renderCalendar() {
         const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
         const isFuture = thisDayDate > todayMidnight;
 
-        let iconsDesktopHtml = "";
-        let hasAnyHabit = false;
-
-        // Obsługa pojedynczego zdarzenia lub starszej struktury (habits)
-        if (dayData.event && EVENT_ICONS[dayData.event]) {
-            iconsDesktopHtml += `<span>${EVENT_ICONS[dayData.event]}</span>`;
-            hasAnyHabit = true;
+        // Wyciągnięcie listy zdarzeń z wieloma źródłami kompatybilności wstecznej
+        let eventsList = [];
+        if (Array.isArray(dayData.events)) {
+            eventsList = dayData.events;
+        } else if (dayData.event) {
+            eventsList = [dayData.event];
         } else if (dayData.habits) {
-            if (dayData.habits.bike) { iconsDesktopHtml += `<span>🚴</span>`; hasAnyHabit = true; }
-            if (dayData.habits.donut) { iconsDesktopHtml += `<span>🍩</span>`; hasAnyHabit = true; }
-            if (dayData.habits.alcohol) { iconsDesktopHtml += `<span>🍺</span>`; hasAnyHabit = true; }
+            if (dayData.habits.bike) eventsList.push('bike');
+            if (dayData.habits.donut) eventsList.push('donut');
+            if (dayData.habits.alcohol) eventsList.push('alcohol');
         }
 
-        const iconsMobileHtml = hasAnyHabit ? `<span class="mobile-alert-icon">❗</span>` : ``;
+        let iconsDesktopHtml = "";
+        eventsList.forEach(ev => {
+            if (EVENT_ICONS[ev]) iconsDesktopHtml += `<span>${EVENT_ICONS[ev]}</span>`;
+        });
+
+        const hasAnyEvents = eventsList.length > 0;
+        const iconsMobileHtml = hasAnyEvents ? `<span class="mobile-alert-icon">❗</span>` : ``;
 
         card.innerHTML = `
             <div class="card-header">
@@ -322,14 +372,24 @@ function openModal(dateStr, data) {
 
     weightInput.value = data.weight || '';
 
-    // Pobranie wartości zdarzenia z nowego pola lub kompatybilność ze starym polem habits
-    let activeEvent = data.event || '';
-    if (!activeEvent && data.habits) {
-        if (data.habits.bike) activeEvent = 'bike';
-        else if (data.habits.donut) activeEvent = 'donut';
-        else if (data.habits.alcohol) activeEvent = 'alcohol';
+    // Wczytanie zdarzeń do rozwijanej listy z opcją multi-select
+    let activeEvents = [];
+    if (Array.isArray(data.events)) {
+        activeEvents = data.events;
+    } else if (data.event) {
+        activeEvents = [data.event];
+    } else if (data.habits) {
+        if (data.habits.bike) activeEvents.push('bike');
+        if (data.habits.donut) activeEvents.push('donut');
+        if (data.habits.alcohol) activeEvents.push('alcohol');
     }
-    eventSelect.value = activeEvent;
+
+    const checkboxes = eventsDropdown.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => {
+        cb.checked = activeEvents.includes(cb.value);
+    });
+    updateMultiSelectTriggerText();
+    eventsDropdown.classList.add('hidden');
 
     const colorRadios = document.getElementsByName('day-color');
     colorRadios.forEach(r => {
@@ -360,7 +420,9 @@ saveDayBtn.addEventListener('click', async () => {
         weightVal = null;
     }
 
-    const selectedEvent = eventSelect.value;
+    // Pobranie zaznaczonych elementów z multi-select
+    const selectedEvents = Array.from(eventsDropdown.querySelectorAll('input[type="checkbox"]:checked'))
+        .map(cb => cb.value);
 
     let selectedColor = "";
     const colorRadios = document.getElementsByName('day-color');
@@ -369,12 +431,13 @@ saveDayBtn.addEventListener('click', async () => {
     const payload = {
         weight: weightVal,
         color: selectedColor,
-        event: selectedEvent,
-        // Zachowanie wstecznej kompatybilności dla starszych odczytów
+        events: selectedEvents,
+        // Wsteczna kompatybilność dla starszych wpisów
+        event: selectedEvents[0] || "",
         habits: {
-            bike: selectedEvent === 'bike',
-            donut: selectedEvent === 'donut',
-            alcohol: selectedEvent === 'alcohol'
+            bike: selectedEvents.includes('bike'),
+            donut: selectedEvents.includes('donut'),
+            alcohol: selectedEvents.includes('alcohol')
         },
         updatedAt: new Date().toISOString()
     };
@@ -497,7 +560,6 @@ function updateStatsCalculations() {
     const startW = parseFloat(startWeightInput.value) || 0;
     const targetW = parseFloat(targetWeightSlider.value) || 0;
 
-    // Pobranie chronologicznie posortowanych pomiarów wagi
     const sortedDates = Object.keys(allDaysData)
         .filter(d => allDaysData[d].weight !== null && allDaysData[d].weight !== undefined)
         .sort();
@@ -507,7 +569,6 @@ function updateStatsCalculations() {
         latestWeight = allDaysData[sortedDates[sortedDates.length - 1]].weight;
     }
 
-    // Calculacja postępu (%)
     let progressPercent = 0;
     const totalToLose = startW - targetW;
     const lostSoFar = startW - latestWeight;
@@ -518,13 +579,11 @@ function updateStatsCalculations() {
     progressBarFill.style.width = `${progressPercent.toFixed(1)}%`;
     progressPercentText.innerText = `${progressPercent.toFixed(1)}%`;
 
-    // Calculacja różnicy od startu
     const totalDiff = latestWeight - startW;
     const totalDiffStr = (totalDiff > 0 ? `+${totalDiff.toFixed(1)}` : `${totalDiff.toFixed(1)}`) + " kg";
     statTotalDiff.innerText = totalDiffStr;
     statTotalDiff.style.color = totalDiff <= 0 ? "#10b981" : "#ef4444";
 
-    // Calculacja różnicy w bieżącym miesiącu
     const year = currentDate.getFullYear();
     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
     const monthDates = sortedDates.filter(d => d.startsWith(`${year}-${month}`));

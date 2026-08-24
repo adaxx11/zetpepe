@@ -244,8 +244,6 @@ button {
     margin: 2px 0;
 }
 
-.weight-display small { font-size: 0.7rem; font-weight: normal; color: var(--text-secondary); }
-
 .icons-container {
     display: flex;
     justify-content: center;
@@ -254,7 +252,12 @@ button {
     margin-bottom: 2px;
 }
 
-.icons-desktop { display: flex; gap: 2px; }
+.icons-desktop { 
+    display: flex; 
+    gap: 3px; 
+    flex-wrap: wrap; 
+    justify-content: center;
+}
 .icons-desktop span { font-size: 0.85rem; line-height: 1; }
 .icons-mobile { display: none; }
 .mobile-alert-icon { font-size: 0.85rem; line-height: 1; }
@@ -265,7 +268,7 @@ button {
 .day-card.status-red { background-color: var(--color-red-bg); border-color: var(--color-red-border); }
 
 /* ==========================================================================
-   5. MODALE I ELEMNTY FORMULARZY
+   5. MODALE & CUSTOM MULTI-SELECT
    ========================================================================== */
 .modal-overlay {
     position: fixed;
@@ -291,7 +294,7 @@ button {
 
 .form-group { margin-bottom: 18px; }
 .form-group label { display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; }
-.form-group input[type="number"], .form-group input[type="text"], .form-group select {
+.form-group input[type="number"], .form-group input[type="text"] {
     width: 100%;
     padding: 10px 12px;
     border-radius: 8px;
@@ -302,8 +305,58 @@ button {
     outline: none;
 }
 
-.form-group select:focus {
-    border-color: var(--primary-color);
+/* Multi-Select Komponent */
+.custom-multiselect {
+    position: relative;
+    width: 100%;
+}
+
+.multiselect-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-main);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.multiselect-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    padding: 6px 0;
+}
+
+.multiselect-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.multiselect-option:hover {
+    background: var(--bg-main);
+}
+
+.multiselect-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
 }
 
 /* Oceny dnia */

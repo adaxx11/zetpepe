@@ -3,67 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Żetpepe - Żryj Przez Pół</title>
+    <title>Żetpepe (ŻPP) - Dziennik Wagi</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/zetpepe/favicon.svg" sizes="any">
 </head>
 <body>
-    <header class="app-header">
-        <div class="logo-container">
-            <div class="logo-icon">
-                <div class="progress-bar-icon"><span class="bar-fill"></span></div>
+
+    <div class="app-container">
+
+        <!-- EKRAN 1: LOGOWANIE -->
+        <section id="screen-login" class="app-screen">
+            <div class="panel-box">
+                <h1>🥗 Żetpepe</h1>
+                <h2>Żryj Przez Pół (ŻPP)</h2>
+                <input type="text" id="username" placeholder="Imię / Login">
+                <input type="password" id="password" placeholder="Hasło lub PIN">
+                <button id="login-btn" class="btn-primary full-width">Zaloguj się</button>
+                <p id="login-error" class="error hidden">Błędny login, hasło lub PIN!</p>
             </div>
-            <h1>Żetpepe</h1>
-        </div>
-        <div class="header-actions">
-            <button id="theme-toggle-btn" class="icon-btn" title="Zmień motyw">🌙</button>
-            <button id="resolutions-btn" class="btn btn-secondary">🎯 Postanowienia</button>
-            <button id="stats-btn" class="btn btn-secondary">📊 Statystyki</button>
-            <button id="auth-btn" class="btn btn-outline">🔒 PIN</button>
-        </div>
-    </header>
-
-    <main class="container">
-        <section class="calendar-controls">
-            <button id="prev-month-btn" class="btn btn-icon">&lt;</button>
-            <h2 id="current-month-label">---</h2>
-            <button id="next-month-btn" class="btn btn-icon">&gt;</button>
         </section>
 
-        <section id="calendar-grid" class="calendar-grid">
-            <!-- Kafle dni wygenerowane dynamicznie -->
+        <!-- EKRAN 2: USTAWIENIE PIN-U -->
+        <section id="screen-pin" class="app-screen hidden">
+            <div class="panel-box">
+                <h2>🔒 Zabezpiecz Żetpepe</h2>
+                <p>To Twoje pierwsze logowanie! Ustaw 4-cyfrowy PIN, którym będziesz logować się w przyszłości.</p>
+                <input type="text" id="new-pin" maxlength="4" placeholder="Wpisz 4 cyfry PINu" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <button id="save-pin-btn" class="btn-primary full-width">Zapisz PIN i wejdź</button>
+                <p id="pin-error" class="error hidden">PIN musi składać się z 4 cyfr!</p>
+            </div>
         </section>
-    </main>
 
-    <!-- Modal Edycji Dnia -->
-    <div id="day-modal" class="modal hidden">
+        <!-- EKRAN 3: GŁÓWNY KALENDARZ -->
+        <section id="screen-dashboard" class="app-screen hidden">
+            
+            <header class="top-header">
+                <div class="user-info">
+                    <span class="avatar">🥗</span>
+                    <span class="welcome-text">ŻPP: <strong id="welcome-username">...</strong></span>
+                </div>
+                <div class="header-controls">
+                    <button id="resolutions-toggle" class="btn-icon" title="Postanowienia">
+                        <i class="fa-solid fa-list-check"></i>
+                    </button>
+                    <button id="stats-toggle" class="btn-icon" title="Statystyki">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </button>
+                    <button id="theme-toggle" class="btn-icon" title="Przełącz motyw">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button id="logout-btn" class="btn-secondary">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </header>
+
+            <section class="month-navigation">
+                <button id="prev-month-btn" class="nav-btn btn-secondary"><i class="fa-solid fa-chevron-left"></i></button>
+                <h2 id="current-month-display" class="current-month">--- ----</h2>
+                <button id="next-month-btn" class="nav-btn btn-secondary"><i class="fa-solid fa-chevron-right"></i></button>
+            </section>
+
+            <main class="calendar-wrapper">
+                <div class="weekdays-grid">
+                    <div>Pon</div>
+                    <div>Wt</div>
+                    <div>Śr</div>
+                    <div>Czw</div>
+                    <div>Pt</div>
+                    <div>Sob</div>
+                    <div>Niedz</div>
+                </div>
+
+                <div id="days-grid" class="days-grid"></div>
+            </main>
+        </section>
+
+    </div>
+
+    <!-- MODAL EDYCYJNY DNIA -->
+    <div id="edit-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modal-date-title">Edycja dnia</h3>
-                <button class="close-btn" data-close="day-modal">&times;</button>
+                <h3>Dzień: <span id="modal-date-display">--.--</span></h3>
+                <button class="close-btn" id="close-modal-btn">&times;</button>
             </div>
-            <form id="day-form">
-                <input type="hidden" id="entry-date">
-                
+            
+            <div class="modal-body">
                 <div class="form-group">
-                    <label for="entry-weight">Waga (kg):</label>
-                    <input type="number" id="entry-weight" step="0.1" min="30" max="150" placeholder="np. 82.5">
+                    <label for="weight-input">Waga:</label>
+                    <input type="number" id="weight-input" min="0" max="150" step="0.1" inputmode="decimal" placeholder="np. 82.5">
                 </div>
 
                 <div class="form-group">
-                    <label>Zdarzenia dnia:</label>
-                    <div id="events-dropdown" class="multiselect-container">
-                        <label class="multiselect-option"><input type="checkbox" value="bike"> 🚴 Rower</label>
-                        <label class="multiselect-option"><input type="checkbox" value="walk"> 🚶 Spacer</label>
-                        <label class="multiselect-option"><input type="checkbox" value="run"> 🏃 Bieganie</label>
-                        <label class="multiselect-option"><input type="checkbox" value="swim"> 🏊 Pływanie</label>
-                        <label class="multiselect-option"><input type="checkbox" value="workout"> 🏋️ Ćwiczenia</label>
-                        <label class="multiselect-option"><input type="checkbox" value="icecream"> 🍦 Lody</label>
-                        <label class="multiselect-option"><input type="checkbox" value="donut"> 🍩 Słodycze</label>
-                        <label class="multiselect-option"><input type="checkbox" value="alcohol"> 🍺 Alkohol</label>
-                        <label class="multiselect-option"><input type="checkbox" value="snacks"> 🍿 Przekąski</label>
-                        <label class="multiselect-option"><input type="checkbox" value="restaurant"> 🍽️ Restauracja</label>
-                        <label class="multiselect-option"><input type="checkbox" value="fastfood"> 🍔 Fastfood</label>
-                        <label class="multiselect-option"><input type="checkbox" value="nightfood"> 🌙 Jedzenie w nocy</label>
+                    <label>Zdarzenia dnia (wybierz wiele):</label>
+                    <div class="custom-multiselect" id="events-multiselect">
+                        <div class="multiselect-trigger" id="events-trigger">
+                            <span id="events-trigger-text">-- Wybierz zdarzenia --</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="multiselect-dropdown hidden" id="events-dropdown">
+                            <label class="multiselect-option"><input type="checkbox" value="bike"> 🚴 Rower</label>
+                            <label class="multiselect-option"><input type="checkbox" value="walk"> 🚶 Spacer</label>
+                            <label class="multiselect-option"><input type="checkbox" value="run"> 🏃 Bieganie</label>
+                            <label class="multiselect-option"><input type="checkbox" value="swim"> 🏊 Pływanie</label>
+                            <label class="multiselect-option"><input type="checkbox" value="workout"> 🏋️ Ćwiczenia</label>
+                            <label class="multiselect-option"><input type="checkbox" value="donut"> 🍩 Słodycze</label>
+                            <label class="multiselect-option"><input type="checkbox" value="icecream"> 🍦 Lody</label>
+                            <label class="multiselect-option"><input type="checkbox" value="alcohol"> 🍺 Alkohol</label>
+                            <label class="multiselect-option"><input type="checkbox" value="snacks"> 🍿 Przekąski</label>
+                            <label class="multiselect-option"><input type="checkbox" value="restaurant"> 🍽️ Restauracja</label>
+                            <label class="multiselect-option"><input type="checkbox" value="fastfood"> 🍔 Fastfood</label>
+                            <label class="multiselect-option"><input type="checkbox" value="nightfood"> 🌙 Jedzenie w nocy</label>
+                        </div>
                     </div>
                 </div>
 
@@ -100,74 +154,82 @@
                         </label>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="entry-notes">Notatki:</label>
-                    <textarea id="entry-notes" rows="3" placeholder="Krótki opis dnia..."></textarea>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" id="delete-entry-btn" class="btn btn-danger hidden">Usuń wpis</button>
-                    <button type="submit" class="btn btn-primary">Zapisz</button>
-                </div>
-            </form>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancel-modal-btn">Anuluj</button>
+                <button class="btn-primary" id="save-day-btn">Zapisz dzień</button>
+            </div>
         </div>
     </div>
 
-    <!-- Modal Postanowienia -->
-    <div id="resolutions-modal" class="modal hidden">
+    <!-- MODAL 1: POSTANOWIENIA -->
+    <div id="resolutions-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🎯 Postanowienia</h3>
-                <button class="close-btn" data-close="resolutions-modal">&times;</button>
+                <h3>📋 Moje Postanowienia</h3>
+                <button class="close-btn" id="close-resolutions-btn">&times;</button>
             </div>
-            <div class="resolutions-body">
-                <form id="add-resolution-form" class="inline-form">
-                    <input type="text" id="resolution-input" placeholder="Nowe postanowienie..." required>
-                    <button type="submit" class="btn btn-primary">Dodaj</button>
-                </form>
+            <div class="modal-body">
+                <div class="add-resolution-box">
+                    <input type="text" id="new-resolution-input" placeholder="Wpisz nowe postanowienie...">
+                    <button id="add-resolution-btn" class="btn-primary"><i class="fa-solid fa-plus"></i></button>
+                </div>
                 <ul id="resolutions-list" class="resolutions-list"></ul>
             </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="save-resolutions-btn">Zapisz postanowienia</button>
+            </div>
         </div>
     </div>
 
-    <!-- Modal Statystyki -->
-    <div id="stats-modal" class="modal hidden">
-        <div class="modal-content modal-large">
+    <!-- MODAL 2: STATYSTYKI -->
+    <div id="stats-modal" class="modal-overlay hidden">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3>📊 Statystyki i Postęp</h3>
-                <button class="close-btn" data-close="stats-modal">&times;</button>
+                <h3>📊 Statystyki i Cele</h3>
+                <button class="close-btn" id="close-stats-btn">&times;</button>
             </div>
-            <div class="stats-body">
-                <div class="stats-summary-cards">
-                    <div class="stat-card">
-                        <span class="stat-label">Waga początkowa</span>
-                        <span id="stat-start-weight" class="stat-value">-- kg</span>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="start-weight-input">Waga początkowa (Start odchudzania):</label>
+                    <input type="number" id="start-weight-input" step="0.1" inputmode="decimal" placeholder="np. 95.0">
+                </div>
+
+                <div class="form-group">
+                    <label>Cel wagi: <strong id="target-weight-val">80</strong> kg</label>
+                    <input type="range" id="target-weight-slider" min="40" max="140" step="0.5" class="range-slider">
+                </div>
+
+                <div class="stats-section">
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Postęp do celu:</span>
+                            <span id="progress-percent-text">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Waga aktualna</span>
-                        <span id="stat-current-weight" class="stat-value">-- kg</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Różnica całkowita</span>
-                        <span id="stat-diff-total" class="stat-value">-- kg</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Różnica (ostatnie 30 dni)</span>
-                        <span id="stat-diff-month" class="stat-value">-- kg</span>
+
+                    <div class="stats-cards-grid">
+                        <div class="stat-card">
+                            <span class="stat-title">Różnica w tym miesiącu</span>
+                            <span id="stat-month-diff" class="stat-value">-- kg</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-title">Różnica od startu</span>
+                            <span id="stat-total-diff" class="stat-value">-- kg</span>
+                        </div>
                     </div>
                 </div>
-                <div class="chart-container">
-                    <canvas id="weight-chart"></canvas>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="save-stats-btn">Zapisz ustawienia</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK & Chart.js -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>

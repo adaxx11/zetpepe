@@ -1,515 +1,432 @@
-/* ==========================================================================
-   1. ZMIENNE I MOTYWY
-   ========================================================================== */
 :root[data-theme="light"] {
-    --bg-main: #f4f6f9;
+    --bg-primary: #f8fafc;
     --bg-card: #ffffff;
     --text-primary: #1e293b;
     --text-secondary: #64748b;
     --border-color: #e2e8f0;
-    --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+
+    --color-gold-bg: #fffbeb;
+    --color-gold-border: #f59e0b;
 
     --color-green-bg: #e6f4ea;
     --color-green-border: #34a853;
-    --color-orange-bg: #fef7e0;
-    --color-orange-border: #fbbc04;
-    --color-red-bg: #fce8e6;
-    --color-red-border: #ea4335;
-    
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
+
+    --color-orange-bg: #fff7ed;
+    --color-orange-border: #f97316;
+
+    --color-red-bg: #fef2f2;
+    --color-red-border: #ef4444;
 }
 
 :root[data-theme="dark"] {
-    --bg-main: #0f172a;
+    --bg-primary: #0f172a;
     --bg-card: #1e293b;
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --border-color: #334155;
-    --shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    --primary-color: #3b82f6;
+    --primary-hover: #60a5fa;
+
+    --color-gold-bg: #451a03;
+    --color-gold-border: #fbbf24;
 
     --color-green-bg: #064e3b;
     --color-green-border: #10b981;
-    --color-orange-bg: #78350f;
-    --color-orange-border: #f59e0b;
-    --color-red-bg: #7f1d1d;
-    --color-red-border: #ef4444;
 
-    --primary-color: #3b82f6;
-    --primary-hover: #60a5fa;
+    --color-orange-bg: #431407;
+    --color-orange-border: #fb923c;
+
+    --color-red-bg: #450a0a;
+    --color-red-border: #f87171;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-    background-color: var(--bg-main);
+    background-color: var(--bg-primary);
     color: var(--text-primary);
+    transition: background-color 0.3s, color 0.3s;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.app-container {
-    max-width: 1000px;
-    width: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.hidden {
-    display: none !important;
-}
-
-/* ==========================================================================
-   2. PANELE LOGOWANIA I PIN-U
-   ========================================================================== */
-.app-screen { width: 100%; }
-
-#screen-login, #screen-pin {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-}
-
-.panel-box {
-    background: var(--bg-card);
-    padding: 35px 30px;
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-    border: 1px solid var(--border-color);
-}
-
-.panel-box h1 { font-size: 2rem; margin-bottom: 4px; }
-.panel-box h2 { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 24px; }
-.panel-box p { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4; }
-
-.panel-box input {
-    width: 100%;
-    padding: 12px 16px;
-    margin-bottom: 14px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-main);
-    color: var(--text-primary);
-    font-size: 1rem;
-    outline: none;
-}
-
-.panel-box input:focus { border-color: var(--primary-color); }
-.error { color: #ef4444; font-size: 0.85rem; margin-top: 10px; }
-
-/* ==========================================================================
-   3. PRZYCISKI
-   ========================================================================== */
-button {
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-}
-
-.full-width { width: 100%; padding: 12px; font-size: 1rem; }
-
-.btn-primary { 
-    background: var(--primary-color); 
-    color: white; 
-    padding: 10px 20px; 
-}
-.btn-primary:hover { background: var(--primary-hover); }
-
-.btn-secondary { 
-    background: var(--bg-main); 
-    color: var(--text-secondary); 
-    padding: 10px 20px; 
-    border: 1px solid var(--border-color); 
-}
-
-.header-controls {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.btn-icon { 
-    background: var(--bg-main); 
-    color: var(--text-primary); 
-    padding: 8px 12px; 
-    font-size: 1rem; 
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-}
-
-/* ==========================================================================
-   4. KALENDARZ I DNI
-   ========================================================================== */
-.top-header, .month-navigation {
+/* Header & Logo */
+.app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--bg-card);
-    padding: 15px 20px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    margin-bottom: 15px;
+    padding: 1rem 1.5rem;
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
 }
 
-.calendar-wrapper {
-    background: var(--bg-card);
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: var(--shadow);
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
-.weekdays-grid {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    text-align: center;
-    font-weight: bold;
-    color: var(--text-secondary);
-    margin-bottom: 12px;
+.progress-bar-icon {
+    width: 28px;
+    height: 14px;
+    border: 2px solid var(--primary-color);
+    border-radius: 4px;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+}
+
+.bar-fill {
+    width: 50%;
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 1px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Przyciski */
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
     font-size: 0.9rem;
+    transition: background-color 0.2s;
 }
 
-.days-grid {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 8px;
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--border-color);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-danger {
+    background-color: #dc2626;
+    color: white;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 50%;
+}
+
+/* Kalendarz */
+.container {
+    max-width: 1000px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
     width: 100%;
+}
+
+.calendar-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
 }
 
 .day-card {
-    background-color: var(--bg-main);
+    background-color: var(--bg-card);
     border: 2px solid var(--border-color);
-    border-radius: 12px;
-    padding: 6px 4px 8px 4px;
+    border-radius: 8px;
+    min-height: 90px;
+    padding: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
-    min-width: 0;
-    overflow: hidden;
-    aspect-ratio: 1 / 1.15;
+    transition: transform 0.1s, border-color 0.2s, background-color 0.2s;
 }
 
-.day-card:hover:not(.outside-month):not(.future-day) {
+.day-card:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow);
 }
 
-.day-card.outside-month {
-    opacity: 0.15;
-    cursor: default;
-}
-
-.day-card.future-day {
-    opacity: 0.35;
+.day-card.disabled {
+    opacity: 0.4;
     cursor: not-allowed;
-    background-color: var(--bg-main);
 }
 
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+.day-card.disabled:hover {
+    transform: none;
 }
 
-.day-number { font-weight: bold; font-size: 0.95rem; }
-
-.today-badge {
-    background: var(--primary-color);
-    color: white;
-    font-size: 0.6rem;
-    padding: 2px 5px;
-    border-radius: 8px;
-    text-transform: uppercase;
-}
-
-.weight-display {
-    font-size: 1.15rem;
+.day-number {
     font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.day-weight {
+    font-size: 0.95rem;
+    font-weight: 600;
     text-align: center;
-    margin: 2px 0;
+    margin: 0.2rem 0;
 }
 
-.icons-container {
+.day-icons {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 20px;
-    margin-bottom: 2px;
+    flex-wrap: wrap;
+    gap: 2px;
+    font-size: 0.8rem;
 }
-
-.icons-desktop { 
-    display: flex; 
-    gap: 3px; 
-    flex-wrap: wrap; 
-    justify-content: center;
-}
-.icons-desktop span { font-size: 0.85rem; line-height: 1; }
-.icons-mobile { display: none; }
-.mobile-alert-icon { font-size: 0.85rem; line-height: 1; }
 
 /* Statusy kolorów */
+.day-card.status-gold { background-color: var(--color-gold-bg); border-color: var(--color-gold-border); }
 .day-card.status-green { background-color: var(--color-green-bg); border-color: var(--color-green-border); }
 .day-card.status-orange { background-color: var(--color-orange-bg); border-color: var(--color-orange-border); }
 .day-card.status-red { background-color: var(--color-red-bg); border-color: var(--color-red-border); }
 
-/* ==========================================================================
-   5. MODALE & CUSTOM MULTI-SELECT
-   ========================================================================== */
-.modal-overlay {
+/* Modale */
+.modal {
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
+.modal.hidden {
+    display: none;
+}
+
 .modal-content {
-    background: var(--bg-card);
+    background-color: var(--bg-card);
+    border-radius: 12px;
     width: 90%;
-    max-width: 440px;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: var(--shadow);
+    max-width: 500px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.close-btn { background: none; font-size: 1.5rem; color: var(--text-secondary); border: none; cursor: pointer; }
-
-.form-group { margin-bottom: 18px; }
-.form-group label { display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; }
-.form-group input[type="number"], .form-group input[type="text"] {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-main);
-    color: var(--text-primary);
-    font-size: 1.05rem;
-    outline: none;
+.modal-large {
+    max-width: 800px;
 }
 
-/* Multi-Select Komponent */
-.custom-multiselect {
-    position: relative;
-    width: 100%;
-}
-
-.multiselect-trigger {
+.modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-main);
-    color: var(--text-primary);
-    cursor: pointer;
-    font-size: 0.95rem;
+    margin-bottom: 1rem;
 }
 
-.multiselect-dropdown {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    background: var(--bg-card);
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.form-group input, .form-group textarea {
+    padding: 0.6rem;
     border: 1px solid var(--border-color);
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-    max-height: 200px;
+    border-radius: 6px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Multiselect Zdarzeń */
+.multiselect-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
+    max-height: 160px;
     overflow-y: auto;
-    z-index: 100;
-    padding: 6px 0;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+    border-radius: 6px;
+    background-color: var(--bg-primary);
 }
 
 .multiselect-option {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 14px;
-    font-size: 0.95rem;
+    gap: 0.4rem;
+    font-size: 0.85rem;
     cursor: pointer;
 }
 
-.multiselect-option:hover {
-    background: var(--bg-main);
+/* Color Picker */
+.color-picker {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
 }
 
-.multiselect-option input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--primary-color);
+.color-option {
     cursor: pointer;
 }
 
-/* Oceny dnia */
-.color-picker { display: flex; gap: 8px; width: 100%; }
-.color-option { flex: 1; cursor: pointer; }
-.color-option input { display: none; }
+.color-option input {
+    display: none;
+}
 
 .color-box {
     display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: border-color 0.2s;
+}
+
+.color-option input:checked + .color-box {
+    border-color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+/* Statystyki */
+.stats-summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background-color: var(--bg-primary);
+    padding: 0.75rem;
+    border-radius: 8px;
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 10px 4px;
-    border-radius: 10px;
-    font-size: 0.78rem;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.stat-value {
+    font-size: 1.2rem;
     font-weight: bold;
-    border: 2px solid var(--border-color);
-    background: var(--bg-main);
-    text-align: center;
-    height: 100%;
+    margin-top: 0.2rem;
 }
 
-.color-box .dot { font-size: 1.1rem; line-height: 1; }
-
-.color-option input:checked + .color-box { 
-    border-color: var(--text-primary); 
-    background-color: rgba(0, 0, 0, 0.05);
-    box-shadow: 0 0 0 2px var(--text-primary);
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
 }
 
-.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
-
-/* MODAL POSTANOWIENIA */
-.add-resolution-box {
+/* Postanowienia */
+.inline-form {
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
-.add-resolution-box input {
+
+.inline-form input {
     flex: 1;
-    padding: 10px 12px;
-    border-radius: 8px;
+    padding: 0.5rem;
     border: 1px solid var(--border-color);
-    background: var(--bg-main);
+    border-radius: 6px;
+    background-color: var(--bg-primary);
     color: var(--text-primary);
 }
 
 .resolutions-list {
     list-style: none;
-    max-height: 250px;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
-.resolution-item {
+.resolutions-list li {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    background: var(--bg-main);
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-}
-.resolution-item input[type="text"] {
-    flex: 1;
-    border: none;
-    background: transparent;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    outline: none;
-}
-.delete-res-btn {
-    background: none;
-    border: none;
-    color: var(--color-red-border);
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 4px;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-/* MODAL STATYSTYKI */
-.range-slider {
-    width: 100%;
-    margin-top: 8px;
-    accent-color: var(--primary-color);
+.hidden {
+    display: none !important;
 }
 
-.stats-section {
-    margin-top: 20px;
-    border-top: 1px solid var(--border-color);
-    padding-top: 16px;
-}
-
-.progress-container { margin-bottom: 16px; }
-.progress-label { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; margin-bottom: 6px; }
-
-.progress-bar-bg {
-    width: 100%;
-    height: 14px;
-    background: var(--bg-main);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary-color), #10b981);
-    transition: width 0.3s ease;
-}
-
-.stats-cards-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.stat-card {
-    background: var(--bg-main);
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-.stat-title { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; }
-.stat-value { font-size: 1.1rem; font-weight: bold; color: var(--text-primary); }
-
-/* ==========================================================================
-   6. WIDOK MOBILNY
-   ========================================================================== */
 @media (max-width: 600px) {
-    body { padding: 6px; }
-    .calendar-wrapper { padding: 8px; }
-    .days-grid, .weekdays-grid { gap: 3px; }
-    
-    .day-card {
-        padding: 4px 2px 6px 2px;
-        border-width: 1px;
-        border-radius: 8px;
-        aspect-ratio: 1 / 1.15;
+    .calendar-grid {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.25rem;
     }
-    
-    .day-number { font-size: 0.75rem; }
-    .today-badge { font-size: 0.45rem; padding: 1px 2px; }
-    .weight-display { font-size: 0.78rem; margin: 0; }
-
-    .icons-container { margin-bottom: 1px; }
-    .icons-desktop { display: none; }
-    .icons-mobile { display: block; }
+    .day-card {
+        min-height: 70px;
+        padding: 0.25rem;
+    }
+    .multiselect-container, .color-picker {
+        grid-template-columns: 1fr;
+    }
 }

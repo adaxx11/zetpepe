@@ -9,14 +9,21 @@
     --border-color: #e2e8f0;
     --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-    --color-gold-bg: #fef9c3;
-    --color-gold-border: #eab308;
-    --color-green-bg: #e6f4ea;
-    --color-green-border: #34a853;
-    --color-orange-bg: #fef7e0;
-    --color-orange-border: #fbbc04;
-    --color-red-bg: #fce8e6;
-    --color-red-border: #ea4335;
+    /* Złoty - ciepły, jasny żółto-złoty z wyrazistą ramką */
+    --color-gold-bg: #fef08a;
+    --color-gold-border: #ca8a04;
+
+    /* Zielony - czysta żywa zieleń */
+    --color-green-bg: #dcfce7;
+    --color-green-border: #16a34a;
+
+    /* Pomarańczowy - soczysty pomarańcz (wyraźnie odróżnia się od złota) */
+    --color-orange-bg: #ffedd5;
+    --color-orange-border: #ea580c;
+
+    /* Czerwony - czysta czerwona barwa */
+    --color-red-bg: #fee2e2;
+    --color-red-border: #dc2626;
     
     --primary-color: #2563eb;
     --primary-hover: #1d4ed8;
@@ -31,11 +38,14 @@
     --shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 
     --color-gold-bg: #713f12;
-    --color-gold-border: #eab308;
+    --color-gold-border: #facc15;
+
     --color-green-bg: #064e3b;
     --color-green-border: #10b981;
-    --color-orange-bg: #78350f;
-    --color-orange-border: #f59e0b;
+
+    --color-orange-bg: #7c2d12;
+    --color-orange-border: #f97316;
+
     --color-red-bg: #7f1d1d;
     --color-red-border: #ef4444;
 
@@ -266,8 +276,12 @@ button {
 .icons-mobile { display: none; }
 .mobile-alert-icon { font-size: 0.85rem; line-height: 1; }
 
-/* Statusy kolorów */
-.day-card.status-gold { background-color: var(--color-gold-bg); border-color: var(--color-gold-border); }
+/* Stylizacja kart z wyróżnieniem statusów */
+.day-card.status-gold { 
+    background-color: var(--color-gold-bg); 
+    border-color: var(--color-gold-border);
+    box-shadow: 0 0 6px rgba(202, 138, 4, 0.25);
+}
 .day-card.status-green { background-color: var(--color-green-bg); border-color: var(--color-green-border); }
 .day-card.status-orange { background-color: var(--color-orange-bg); border-color: var(--color-orange-border); }
 .day-card.status-red { background-color: var(--color-red-bg); border-color: var(--color-red-border); }

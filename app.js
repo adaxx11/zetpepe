@@ -340,7 +340,7 @@ async function renderCalendar() {
         });
 
         const hasAnyEvents = eventsList.length > 0;
-        const iconsMobileHtml = hasAnyEvents ? `<span class="mobile-alert-icon">ℹ️</span>` : ``;
+        const iconsMobileHtml = hasAnyEvents ? `<span class="mobile-alert-icon">⋮</span>` : ``;
 
         card.innerHTML = `
             <div class="card-header">
